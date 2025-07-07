@@ -1,17 +1,69 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import AuthModal from "./AuthModal";
-import { FaHeart, FaShoppingCart, FaUser, FaSearch, FaBars, FaTimes } from "react-icons/fa";
-import MobileDrawer from "./MobileDrawer";
+import {
+  FaHeart,
+  FaShoppingCart,
+  FaUser,
+  FaSearch,
+  FaBars,
+  FaTimes,
+  FaChevronDown,
+  FaChevronUp,
+} from "react-icons/fa";
 import { useWishlist } from "@/context/WishlistContext";
+import { auth, db } from "@/lib/firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 export default function Navbar() {
   const [loginOpen, setLoginOpen] = useState(false);
   const [shopOpen, setShopOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [orders, setOrders] = useState([]);
 
   const { wishlist } = useWishlist();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        await fetchOrders(currentUser.uid);
+      } else {
+        setUser(null);
+        setOrders([]);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const fetchOrders = async (uid) => {
+    try {
+      const q = query(collection(db, "orders"), where("userId", "==", uid));
+      const snapshot = await getDocs(q);
+      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setOrders(data);
+    } catch (err) {
+      console.error("Failed to fetch orders", err);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      setDropdownOpen(false);
+      setMobileMenuOpen(false);
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  };
+
+  // Close mobile menu on link click helper
+  const handleMobileLinkClick = () => {
+    setMobileMenuOpen(false);
+  };
 
   return (
     <>
@@ -100,13 +152,48 @@ export default function Navbar() {
             </a>
           </Link>
 
-          {/* Login */}
-          <button
-            onClick={() => setLoginOpen(true)}
-            className="flex items-center gap-2 text-lg px-3 py-2 rounded-md hover:bg-[#F76C6C] hover:text-white transition cursor-pointer bg-transparent border border-transparent"
-          >
-            <FaUser /> Login
-          </button>
+          {/* User / Login */}
+          {user ? (
+            <div className="relative">
+              <button
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className="flex items-center gap-2 text-lg px-3 py-2 rounded-md hover:bg-[#F76C6C] hover:text-white transition"
+              >
+                {user.displayName || user.email.split("@")[0]}
+                {dropdownOpen ? <FaChevronUp /> : <FaChevronDown />}
+              </button>
+
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-2 w-64 bg-white text-black rounded-md shadow-lg z-50 p-4">
+                  <h4 className="text-[#1A2A6C] font-bold mb-2">Order History</h4>
+                  {orders.length === 0 ? (
+                    <p className="text-sm text-gray-500">No orders found.</p>
+                  ) : (
+                    <ul className="text-sm max-h-40 overflow-y-auto">
+                      {orders.map((order) => (
+                        <li key={order.id} className="border-b py-2">
+                          #{order.id.slice(0, 6)} - {order.status || "Pending"}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  <button
+                    onClick={handleLogout}
+                    className="mt-4 w-full bg-[#F76C6C] text-white py-2 rounded hover:bg-[#d85757] transition"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <button
+              onClick={() => setLoginOpen(true)}
+              className="flex items-center gap-2 text-lg px-3 py-2 rounded-md hover:bg-[#F76C6C] hover:text-white transition cursor-pointer bg-transparent border border-transparent"
+            >
+              <FaUser /> Login
+            </button>
+          )}
 
           {/* Search */}
           <div className="flex items-center bg-[#E7EEF9] rounded-full px-4 py-1 text-[#1A2A6C] w-48 focus-within:ring-2 focus-within:ring-[#F76C6C]">
@@ -124,6 +211,8 @@ export default function Navbar() {
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="md:hidden text-white text-3xl focus:outline-none"
           aria-label="Toggle menu"
+          aria-expanded={mobileMenuOpen}
+          aria-controls="mobile-menu"
         >
           {mobileMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
@@ -131,7 +220,8 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       <div
-        className={`md:hidden fixed top-[64px] left-0 right-0 bg-[#1A2A6C] text-white p-6 space-y-6 shadow-xl transform transition-transform duration-300 z-40 ${
+        id="mobile-menu"
+        className={`md:hidden fixed top-[64px] left-0 right-0 bg-[#1A2A6C] text-white p-6 space-y-6 shadow-xl transform transition-transform duration-300 z-40 overflow-auto max-h-[calc(100vh-64px)] ${
           mobileMenuOpen ? "translate-y-0" : "-translate-y-full"
         }`}
       >
@@ -143,7 +233,9 @@ export default function Navbar() {
             <ul className="space-y-2">
               <li>
                 <Link href="/shop?category=Navratri%20Kurta" legacyBehavior>
-                  <a className="block hover:text-[#F76C6C] transition">{`Navratri Kurta`}</a>
+                  <a onClick={handleMobileLinkClick} className="block hover:text-[#F76C6C] transition">
+                    Navratri Kurta
+                  </a>
                 </Link>
               </li>
             </ul>
@@ -151,26 +243,32 @@ export default function Navbar() {
             <ul className="space-y-2">
               <li>
                 <Link href="/shop?category=Lehenga" legacyBehavior>
-                  <a className="block hover:text-[#F76C6C] transition">Lehenga</a>
+                  <a onClick={handleMobileLinkClick} className="block hover:text-[#F76C6C] transition">
+                    Lehenga
+                  </a>
                 </Link>
               </li>
               <li>
                 <Link href="/shop?category=Navratri%20Collection" legacyBehavior>
-                  <a className="block hover:text-[#F76C6C] transition">Navratri Collection</a>
+                  <a onClick={handleMobileLinkClick} className="block hover:text-[#F76C6C] transition">
+                    Navratri Collection
+                  </a>
                 </Link>
               </li>
               <li>
                 <Link href="/shop?category=Dresses" legacyBehavior>
-                  <a className="block hover:text-[#F76C6C] transition">Dresses</a>
+                  <a onClick={handleMobileLinkClick} className="block hover:text-[#F76C6C] transition">
+                    Dresses
+                  </a>
                 </Link>
               </li>
             </ul>
           </div>
         </details>
 
-        {/* Wishlist with count */}
+        {/* Wishlist */}
         <Link href="/wishlist" legacyBehavior>
-          <a className="relative flex items-center gap-2 text-lg hover:text-[#F76C6C] transition">
+          <a onClick={handleMobileLinkClick} className="relative flex items-center gap-2 text-lg hover:text-[#F76C6C] transition">
             <FaHeart />
             Wishlist
             {wishlist.length > 0 && (
@@ -181,22 +279,51 @@ export default function Navbar() {
           </a>
         </Link>
 
+        {/* Cart */}
         <Link href="/cart" legacyBehavior>
-          <a className="flex items-center gap-2 text-lg hover:text-[#F76C6C] transition">
+          <a onClick={handleMobileLinkClick} className="flex items-center gap-2 text-lg hover:text-[#F76C6C] transition">
             <FaShoppingCart /> Cart
           </a>
         </Link>
 
-        <button
-          onClick={() => {
-            setLoginOpen(true);
-            setMobileMenuOpen(false);
-          }}
-          className="flex items-center gap-2 text-lg hover:text-[#F76C6C] transition bg-transparent border-none outline-none"
-        >
-          <FaUser /> Login
-        </button>
+        {/* User Section in Mobile Menu */}
+        {user ? (
+          <div className="border-t border-[#F76C6C] pt-4">
+            <p className="font-semibold text-lg mb-2">
+              Hello, <span className="text-[#F76C6C]">{user.displayName || user.email.split("@")[0]}</span>
+            </p>
+            <h4 className="text-[#F76C6C] font-bold mb-2">Order History</h4>
+            {orders.length === 0 ? (
+              <p className="text-sm text-gray-300 mb-3">No orders found.</p>
+            ) : (
+              <ul className="text-sm max-h-40 overflow-y-auto mb-3">
+                {orders.map((order) => (
+                  <li key={order.id} className="border-b border-gray-600 py-1">
+                    #{order.id.slice(0, 6)} - {order.status || "Pending"}
+                  </li>
+                ))}
+              </ul>
+            )}
+            <button
+              onClick={handleLogout}
+              className="w-full bg-[#F76C6C] text-white py-2 rounded hover:bg-[#d85757] transition"
+            >
+              Logout
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => {
+              setLoginOpen(true);
+              setMobileMenuOpen(false);
+            }}
+            className="flex items-center gap-2 text-lg hover:text-[#F76C6C] transition bg-transparent border-none outline-none"
+          >
+            <FaUser /> Login
+          </button>
+        )}
 
+        {/* Search */}
         <div className="flex items-center bg-[#E7EEF9] rounded-full px-4 py-2 text-[#1A2A6C] mt-4">
           <FaSearch />
           <input
