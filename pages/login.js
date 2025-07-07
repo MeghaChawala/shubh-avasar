@@ -14,6 +14,9 @@ export default function LoginPage() {
   const [firebaseError, setFirebaseError] = useState("");
   const router = useRouter();
 
+  useEffect(() => {
+    console.log("ForgotPassword component mounted");
+  }, []);
   const onSubmit = async (data) => {
     setFirebaseError("");
     try {
@@ -72,8 +75,7 @@ export default function LoginPage() {
       </p>
 
       <p className="mt-2 text-center text-sm">
-        <Link href="/forgot-password" legacyBehavior>
-          <a className="text-gray-600 hover:underline">Forgot Password?</a>
+        <Link href="/forgot-password" >Forgot Password?
         </Link>
       </p>
     </div>

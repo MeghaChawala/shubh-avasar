@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { sendPasswordResetEmail } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { auth ,db} from "@/lib/firebase";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 export default function ForgotPasswordForm({ switchTo, onClose }) {
   const {
@@ -10,25 +11,31 @@ export default function ForgotPasswordForm({ switchTo, onClose }) {
     formState: { errors },
   } = useForm();
 
+
   const [firebaseError, setFirebaseError] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
   const onSubmit = async ({ email }) => {
     setFirebaseError("");
     setSuccessMsg("");
-    try {
-      await sendPasswordResetEmail(auth, email);
-      setSuccessMsg("Password reset link sent!");
-      setTimeout(() => {
-        onClose();
-      }, 1500);
-    } catch (err) {
-      if (err.code === "auth/user-not-found") {
-        setFirebaseError("Email not registered.");
-      } else {
-        setFirebaseError("Something went wrong. Please try again.");
-      }
-    }
+     try {
+          const q = query(collection(db, "users"), where("email", "==", email.toLowerCase()));
+          const querySnapshot = await getDocs(q);
+          console.log("Querying for email:", email.toLowerCase());
+          console.log("Docs found:", querySnapshot.docs.map(doc => doc.data()));
+    
+          if (querySnapshot.empty) {
+            setFirebaseError("Email is not registered.");
+
+            return;
+          }
+    
+          await sendPasswordResetEmail(auth, email);
+          setSuccessMsg("Password reset email sent! Check your inbox.");
+        } catch (err) {
+          setFirebaseError("Failed to send reset email. Please try again later.");
+          console.error(err);
+        }
   };
 
   return (

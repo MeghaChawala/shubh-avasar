@@ -9,10 +9,7 @@ export default function ForgotPassword() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    console.log("ForgotPassword component loaded");
-    setMessage("");
-    setError("");
-    setEmail("");
+    console.log("ForgotPassword component mounted");
   }, []);
 
   const handleReset = async (e) => {
@@ -43,14 +40,17 @@ export default function ForgotPassword() {
   return (
     <div className="max-w-md mx-auto mt-20 p-8 border rounded shadow-lg">
       <h2 className="text-2xl font-semibold mb-6 text-center">Reset Password</h2>
-      <form onSubmit={handleReset} className="space-y-4" noValidate>
+      <form onSubmit={handleReset} className="space-y-4">
         <div>
           <label className="block mb-1 font-medium">Email</label>
           <input
             type="email"
             required
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              console.log("Email input:", e.target.value);
+            }}
             className="w-full px-3 py-2 border rounded"
           />
         </div>
