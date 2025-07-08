@@ -4,9 +4,7 @@ export default function FiltersSidebar({ filters = {}, onFilterChange }) {
       {Object.entries(filters).map(([filterKey, options]) => (
         <div key={filterKey} className="pb-4 border-b border-gray-300">
           <h3 className="text-lg font-semibold text-[#1A2A6C] capitalize mb-3">
-            {filterKey === "shippingTime"
-              ? "Shipping Time"
-              : filterKey === "tailoring"
+            {filterKey === "tailoring"
               ? "Tailoring Options"
               : filterKey}
           </h3>

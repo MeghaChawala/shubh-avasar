@@ -11,43 +11,52 @@ const PAGE_SIZE = 6;
 
 export default function ShopPage() {
   const router = useRouter();
-  const category = router.query.category || "";
+  const initialCategory = router.query.category || "";
 
-  // Filters available for UI
+  // Filters for the UI
   const filters = {
     price: ["Under $50", "$50 - $100", "Above $100"],
     color: ["Red", "Blue", "Green", "Yellow", "Pink"],
     size: ["S", "M", "L", "XL"],
-    shippingTime: ["1-3 days", "4-7 days", "More than a week"],
+    category: ["Kurtas", "Party Wear", "Navratri Collection", "T-Shirts"],
     tailoring: ["Yes", "No"],
   };
 
-  // State to hold products, loading, errors
   const [productsData, setProductsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // State for selected filters
   const [selectedFilters, setSelectedFilters] = useState({
     price: [],
     color: [],
     size: [],
-    shippingTime: [],
+    category: [],
     tailoring: [],
   });
 
-  // Pagination state
   const [page, setPage] = useState(1);
 
+  // Load initial category into filters
+  useEffect(() => {
+    if (!initialCategory) return;
+
+    setSelectedFilters((prev) => {
+      if (prev.category.length === 0) {
+        return {
+          ...prev,
+          category: [initialCategory],
+        };
+      }
+      return prev;
+    });
+  }, [initialCategory]);
+
+  // Fetch all products (category filtering is done client-side now)
   useEffect(() => {
     async function fetchProducts() {
       setLoading(true);
       setError(null);
       try {
-        const q = category
-          ? query(collection(db, "products"), where("category", "==", category))
-          : collection(db, "products");
-
+        const q = collection(db, "products");
         const querySnapshot = await getDocs(q);
         const items = querySnapshot.docs.map((doc) => ({
           id: doc.id,
@@ -60,73 +69,79 @@ export default function ShopPage() {
       setLoading(false);
     }
     fetchProducts();
-  }, [category]);
+  }, []);
 
-  // Filter products client side based on selected filters
+  // Handle filter changes
+  function handleFilterChange(filterKey, option, checked) {
+    setSelectedFilters((prev) => {
+      const options = prev[filterKey] || [];
+      let updatedOptions;
+
+      if (checked) {
+        updatedOptions = [...options, option];
+
+        // Remove initial category from URL if manually selecting something else
+        if (
+          filterKey === "category" &&
+          options.includes(initialCategory) &&
+          option !== initialCategory
+        ) {
+          updatedOptions = updatedOptions.filter((cat) => cat !== initialCategory);
+        }
+
+      } else {
+        updatedOptions = options.filter((o) => o !== option);
+      }
+
+      return {
+        ...prev,
+        [filterKey]: updatedOptions,
+      };
+    });
+
+    setPage(1); // Reset to first page
+  }
+
+  // Client-side filtering logic
   const filteredProducts = productsData.filter((product) => {
-    // Price filter
-    if (selectedFilters.price.length > 0) {
-      const price = product.price;
-      const priceMatch = selectedFilters.price.some((priceFilter) => {
-        if (priceFilter === "Under $50") return price < 50;
-        if (priceFilter === "$50 - $100") return price >= 50 && price <= 100;
-        if (priceFilter === "Above $100") return price > 100;
+    const { price, color, size, category, tailoring } = selectedFilters;
+
+    if (
+      price.length > 0 &&
+      !price.some((range) => {
+        if (range === "Under $50") return product.price < 50;
+        if (range === "$50 - $100") return product.price >= 50 && product.price <= 100;
+        if (range === "Above $100") return product.price > 100;
         return false;
-      });
-      if (!priceMatch) return false;
-    }
+      })
+    ) return false;
 
-    // Color filter (assuming product.colors is array)
     if (
-      selectedFilters.color.length > 0 &&
-      (!product.colors || !product.colors.some((c) => selectedFilters.color.includes(c)))
-    ) {
-      return false;
-    }
+      color.length > 0 &&
+      (!product.colors || !product.colors.some((c) => color.includes(c)))
+    ) return false;
 
-    // Size filter (assuming product.sizes is array)
     if (
-      selectedFilters.size.length > 0 &&
-      (!product.sizes || !product.sizes.some((s) => selectedFilters.size.includes(s)))
-    ) {
-      return false;
-    }
+      size.length > 0 &&
+      (!product.sizes || !product.sizes.some((s) => size.includes(s)))
+    ) return false;
 
-    // Shipping time filter
     if (
-      selectedFilters.shippingTime.length > 0 &&
-      !selectedFilters.shippingTime.includes(product.shippingTime)
-    ) {
-      return false;
-    }
+      category.length > 0 &&
+      !category.includes(product.category)
+    ) return false;
 
-    // Tailoring filter
     if (
-      selectedFilters.tailoring.length > 0 &&
-      !selectedFilters.tailoring.includes(product.tailoring)
-    ) {
-      return false;
-    }
+      tailoring.length > 0 &&
+      !tailoring.includes(product.tailoring)
+    ) return false;
 
     return true;
   });
 
-  // Pagination slicing
+  // Pagination
   const totalPages = Math.ceil(filteredProducts.length / PAGE_SIZE);
   const paginatedProducts = filteredProducts.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-
-  // Handle filter change from sidebar/drawer
-  function handleFilterChange(filterKey, option, checked) {
-    setSelectedFilters((prev) => {
-      const options = prev[filterKey] || [];
-      if (checked) {
-        return { ...prev, [filterKey]: [...options, option] };
-      } else {
-        return { ...prev, [filterKey]: options.filter((o) => o !== option) };
-      }
-    });
-    setPage(1); // reset page on filter change
-  }
 
   if (loading) return <p className="p-6">Loading products...</p>;
   if (error) return <p className="p-6 text-red-600">{error}</p>;
@@ -139,14 +154,18 @@ export default function ShopPage() {
           "repeating-radial-gradient(circle at center, rgba(247,108,108,0.1) 0, rgba(247,108,108,0.1) 1px, transparent 1px, transparent 40px)",
       }}
     >
-      <Breadcrumb category={category} />
+      <Breadcrumb category={initialCategory} />
 
       <h1 className="text-3xl font-semibold text-[#1A2A6C] mb-8">
-        {category ? `Shop: ${category}` : "All Products"}
+        {selectedFilters.category.length > 0
+          ? `Shop: ${selectedFilters.category.join(", ")}`
+          : initialCategory
+            ? `Shop: ${initialCategory}`
+            : "All Products"}
       </h1>
 
       <div className="flex gap-10">
-        {/* Sidebar filters on desktop */}
+        {/* Desktop Filters */}
         <div className="hidden md:block w-64">
           <FiltersSidebar
             filters={filters}
@@ -155,14 +174,14 @@ export default function ShopPage() {
           />
         </div>
 
-        {/* Mobile filter drawer */}
+        {/* Mobile Filter Drawer */}
         <FilterDrawer
           filters={filters}
           selectedFilters={selectedFilters}
           onFilterChange={handleFilterChange}
         />
 
-        {/* Products grid */}
+        {/* Product Grid */}
         <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {paginatedProducts.length === 0 ? (
             <p>No products found.</p>

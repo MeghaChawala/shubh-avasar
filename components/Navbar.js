@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import AuthModal from "./AuthModal";
 import {
   FaHeart,
@@ -60,71 +61,76 @@ export default function Navbar() {
     }
   };
 
-  // Close mobile menu on link click helper
   const handleMobileLinkClick = () => {
     setMobileMenuOpen(false);
   };
 
   return (
     <>
-      <nav className="bg-[#1A2A6C] text-white shadow-lg px-8 py-4 flex justify-between items-center sticky top-0 z-50 font-sans">
+      <nav className="bg-[#1A2A6C] text-white shadow-lg px-8 py-3 flex justify-between items-center sticky top-0 z-50 font-sans">
         {/* Brand */}
         <Link href="/" legacyBehavior>
-          <a className="text-4xl font-extrabold text-[#D0E1F9] tracking-wide hover:text-[#F76C6C] transition-transform duration-300 hover:scale-110">
-            Shubh <span className="text-[#F76C6C] italic">Avasar</span>
+          <a className="flex items-center">
+            <Image
+              src="/01.png"
+              alt="Shubh Avasar Logo"
+              width={2226}
+              height={1698}
+              priority
+              className="object-contain max-h-24 w-auto"
+            />
           </a>
         </Link>
 
+
         {/* Desktop Nav */}
-        <div className="hidden md:flex space-x-10 items-center relative font-semibold">
+        <div className="hidden md:flex space-x-8 items-center relative font-semibold">
           {/* Shop Dropdown */}
           <div
             className="relative"
             onMouseEnter={() => setShopOpen(true)}
             onMouseLeave={() => setShopOpen(false)}
           >
-            <span className="cursor-pointer select-none text-lg px-3 py-2 rounded-md hover:bg-[#F76C6C] hover:text-white transition">
+            <span className="cursor-pointer select-none text-xl px-4 py-2 rounded-md hover:bg-[#F76C6C] hover:text-white transition">
               Shop
             </span>
-
             <div
-              className={`absolute top-full left-0 mt-2 bg-white rounded-lg shadow-2xl text-black p-6 w-96 grid grid-cols-2 gap-6 transition-transform duration-300 origin-top ${
-                shopOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"
-              }`}
+              className={`absolute top-full left-0 mt-2 bg-white rounded-lg shadow-2xl text-black p-6 w-96 grid grid-cols-2 gap-6 transition-transform duration-300 origin-top ${shopOpen
+                  ? "scale-100 opacity-100"
+                  : "scale-95 opacity-0 pointer-events-none"
+                }`}
             >
-              {/* Men */}
               <div>
-                <h3 className="font-bold text-[#1A2A6C] mb-3 border-b border-[#F76C6C] pb-1">Men</h3>
+                <h3 className="font-bold text-[#1A2A6C] mb-3 border-b border-[#F76C6C] pb-1">
+                  Men
+                </h3>
                 <ul className="space-y-2">
                   <li>
-                    <Link href="/shop?category=Navratri%20Kurta" legacyBehavior>
-                      <a className="hover:text-[#1A2A6C] transition-colors duration-200">
-                        Navratri Kurta
-                      </a>
+                    <Link href="/shop?category=Kurtas" legacyBehavior>
+                      <a className="hover:text-[#1A2A6C]">Kurtas</a>
                     </Link>
                   </li>
                 </ul>
               </div>
 
-              {/* Women */}
               <div>
-                <h3 className="font-bold text-[#1A2A6C] mb-3 border-b border-[#F76C6C] pb-1">Women</h3>
+                <h3 className="font-bold text-[#1A2A6C] mb-3 border-b border-[#F76C6C] pb-1">
+                  Women
+                </h3>
                 <ul className="space-y-2">
                   <li>
-                    <Link href="/shop?category=Lehenga" legacyBehavior>
-                      <a className="hover:text-[#1A2A6C] transition-colors duration-200">Lehenga</a>
+                    <Link href="/shop?category=Party%20Wear" legacyBehavior>
+                      <a className="hover:text-[#1A2A6C]">Party Wear</a>
                     </Link>
                   </li>
                   <li>
                     <Link href="/shop?category=Navratri%20Collection" legacyBehavior>
-                      <a className="whitespace-nowrap hover:text-[#1A2A6C] transition-colors duration-200">
-                        Navratri Collection
-                      </a>
+                      <a className="hover:text-[#1A2A6C]">Navratri Collection</a>
                     </Link>
                   </li>
                   <li>
-                    <Link href="/shop?category=Dresses" legacyBehavior>
-                      <a className="hover:text-[#1A2A6C] transition-colors duration-200">Dresses</a>
+                    <Link href="/shop?category=T-Shirts" legacyBehavior>
+                      <a className="hover:text-[#1A2A6C]">T-Shirts</a>
                     </Link>
                   </li>
                 </ul>
@@ -134,9 +140,9 @@ export default function Navbar() {
 
           {/* Wishlist */}
           <Link href="/wishlist" legacyBehavior>
-            <a className="relative flex items-center gap-2 text-lg px-3 py-2 rounded-md hover:bg-[#F76C6C] hover:text-white transition">
-              <FaHeart />
-              Wishlist
+            <a className="relative flex items-center gap-2 text-xl px-4 py-2 rounded-md hover:bg-[#F76C6C] transition">
+              <FaHeart className="w-5 h-5 self-center" />
+              <span className="leading-none">Wishlist</span>
               {wishlist.length > 0 && (
                 <span className="absolute -top-1 -right-2 bg-[#F76C6C] text-white text-xs px-1.5 py-0.5 rounded-full">
                   {wishlist.length}
@@ -147,22 +153,22 @@ export default function Navbar() {
 
           {/* Cart */}
           <Link href="/cart" legacyBehavior>
-            <a className="flex items-center gap-2 text-lg px-3 py-2 rounded-md hover:bg-[#F76C6C] hover:text-white transition">
-              <FaShoppingCart /> Cart
+            <a className="flex items-center gap-2 text-xl px-4 py-2 rounded-md hover:bg-[#F76C6C] transition">
+              <FaShoppingCart className="w-5 h-5 self-center" />
+              <span className="leading-none">Cart</span>
             </a>
           </Link>
 
-          {/* User / Login */}
+          {/* User Login/Dropdown */}
           {user ? (
             <div className="relative">
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center gap-2 text-lg px-3 py-2 rounded-md hover:bg-[#F76C6C] hover:text-white transition"
+                className="flex items-center gap-2 text-xl px-4 py-2 rounded-md hover:bg-[#F76C6C] transition"
               >
                 {user.displayName || user.email.split("@")[0]}
                 {dropdownOpen ? <FaChevronUp /> : <FaChevronDown />}
               </button>
-
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-64 bg-white text-black rounded-md shadow-lg z-50 p-4">
                   <h4 className="text-[#1A2A6C] font-bold mb-2">Order History</h4>
@@ -189,7 +195,7 @@ export default function Navbar() {
           ) : (
             <button
               onClick={() => setLoginOpen(true)}
-              className="flex items-center gap-2 text-lg px-3 py-2 rounded-md hover:bg-[#F76C6C] hover:text-white transition cursor-pointer bg-transparent border border-transparent"
+              className="flex items-center gap-2 text-xl px-4 py-2 hover:bg-[#F76C6C] transition"
             >
               <FaUser /> Login
             </button>
@@ -206,13 +212,10 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Hamburger */}
+        {/* Hamburger for mobile */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="md:hidden text-white text-3xl focus:outline-none"
-          aria-label="Toggle menu"
-          aria-expanded={mobileMenuOpen}
-          aria-controls="mobile-menu"
         >
           {mobileMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
@@ -220,21 +223,19 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       <div
-        id="mobile-menu"
-        className={`md:hidden fixed top-[64px] left-0 right-0 bg-[#1A2A6C] text-white p-6 space-y-6 shadow-xl transform transition-transform duration-300 z-40 overflow-auto max-h-[calc(100vh-64px)] ${
-          mobileMenuOpen ? "translate-y-0" : "-translate-y-full"
-        }`}
+        className={`md:hidden fixed top-[72px] left-0 right-0 bg-[#1A2A6C] text-white p-6 pt-[60px] space-y-6 shadow-xl transform transition-transform duration-300 z-40 max-h-[calc(100vh-72px)] overflow-auto ${mobileMenuOpen ? "translate-y-0" : "-translate-y-full"
+          }`}
       >
-        {/* Shop Accordion */}
+        {/* Shop Section */}
         <details className="group border-b border-[#F76C6C] pb-2" open>
           <summary className="cursor-pointer font-semibold text-xl select-none">Shop</summary>
           <div className="pl-4 mt-3 space-y-3">
             <h4 className="text-[#F76C6C] font-bold">Men</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/shop?category=Navratri%20Kurta" legacyBehavior>
-                  <a onClick={handleMobileLinkClick} className="block hover:text-[#F76C6C] transition">
-                    Navratri Kurta
+                <Link href="/shop?category=Kurtas" legacyBehavior>
+                  <a onClick={handleMobileLinkClick} className="block hover:text-[#F76C6C]">
+                    Kurtas
                   </a>
                 </Link>
               </li>
@@ -242,23 +243,23 @@ export default function Navbar() {
             <h4 className="text-[#F76C6C] font-bold mt-4">Women</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/shop?category=Lehenga" legacyBehavior>
-                  <a onClick={handleMobileLinkClick} className="block hover:text-[#F76C6C] transition">
-                    Lehenga
+                <Link href="/shop?category=Party%20Wear" legacyBehavior>
+                  <a onClick={handleMobileLinkClick} className="block hover:text-[#F76C6C]">
+                    Party Wear
                   </a>
                 </Link>
               </li>
               <li>
                 <Link href="/shop?category=Navratri%20Collection" legacyBehavior>
-                  <a onClick={handleMobileLinkClick} className="block hover:text-[#F76C6C] transition">
+                  <a onClick={handleMobileLinkClick} className="block hover:text-[#F76C6C]">
                     Navratri Collection
                   </a>
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=Dresses" legacyBehavior>
-                  <a onClick={handleMobileLinkClick} className="block hover:text-[#F76C6C] transition">
-                    Dresses
+                <Link href="/shop?category=T-Shirts" legacyBehavior>
+                  <a onClick={handleMobileLinkClick} className="block hover:text-[#F76C6C]">
+                    T-Shirts
                   </a>
                 </Link>
               </li>
@@ -268,25 +269,30 @@ export default function Navbar() {
 
         {/* Wishlist */}
         <Link href="/wishlist" legacyBehavior>
-          <a onClick={handleMobileLinkClick} className="relative flex items-center gap-2 text-lg hover:text-[#F76C6C] transition">
-            <FaHeart />
-            Wishlist
+          <a
+            onClick={handleMobileLinkClick}
+            className="flex items-center gap-2 text-lg hover:text-[#F76C6C] relative"
+          >
+            <FaHeart className="text-xl" />
+            <span>Wishlist</span>
             {wishlist.length > 0 && (
-              <span className="absolute -top-1 -right-2 bg-[#F76C6C] text-white text-xs px-1.5 py-0.5 rounded-full">
+              <span className="ml-2 bg-[#F76C6C] text-white text-xs px-2 py-0.5 rounded-full">
                 {wishlist.length}
               </span>
             )}
           </a>
         </Link>
 
+
         {/* Cart */}
         <Link href="/cart" legacyBehavior>
-          <a onClick={handleMobileLinkClick} className="flex items-center gap-2 text-lg hover:text-[#F76C6C] transition">
-            <FaShoppingCart /> Cart
+          <a onClick={handleMobileLinkClick} className="flex gap-2 text-lg hover:text-[#F76C6C]">
+            <FaShoppingCart className="w-5 h-5 self-center" />
+            <span className="leading-none">Cart</span>
           </a>
         </Link>
 
-        {/* User Section in Mobile Menu */}
+        {/* Login/Logout */}
         {user ? (
           <div className="border-t border-[#F76C6C] pt-4">
             <p className="font-semibold text-lg mb-2">
@@ -306,7 +312,7 @@ export default function Navbar() {
             )}
             <button
               onClick={handleLogout}
-              className="w-full bg-[#F76C6C] text-white py-2 rounded hover:bg-[#d85757] transition"
+              className="w-full bg-[#F76C6C] text-white py-2 rounded hover:bg-[#d85757]"
             >
               Logout
             </button>
@@ -317,7 +323,7 @@ export default function Navbar() {
               setLoginOpen(true);
               setMobileMenuOpen(false);
             }}
-            className="flex items-center gap-2 text-lg hover:text-[#F76C6C] transition bg-transparent border-none outline-none"
+            className="flex items-center gap-2 text-lg hover:text-[#F76C6C]"
           >
             <FaUser /> Login
           </button>
@@ -329,12 +335,12 @@ export default function Navbar() {
           <input
             type="text"
             placeholder="Search products..."
-            className="ml-2 bg-transparent outline-none w-full text-sm font-medium placeholder-[#1A2A6C]"
+            className="ml-2 bg-transparent outline-none w-full text-sm placeholder-[#1A2A6C]"
           />
         </div>
       </div>
 
-      {/* Auth Modal */}
+      {/* Login Modal */}
       <AuthModal isOpen={loginOpen} onClose={() => setLoginOpen(false)} />
     </>
   );

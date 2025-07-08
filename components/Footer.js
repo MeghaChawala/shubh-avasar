@@ -1,20 +1,25 @@
 import { FaFacebookF, FaInstagram } from 'react-icons/fa';
+import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#F8F9FA] text-gray-800 pt-8 pb-4 text-center text-sm mt-12 border-t"> {/* bg-[#1F2937] text-white */}
+    <footer className="bg-[#F8F9FA] text-gray-800 pt-8 pb-4 text-center text-sm mt-auto border-t">
       <div className="max-w-4xl mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-4">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
           {/* Link Section */}
-          <div className="space-x-4 mb-4 md:mb-0 text-base">
-            <a href="#" className="hover:text-red-600 transition">About</a>
-            <a href="#" className="hover:text-red-600 transition">Contact</a>
+          <div className="flex flex-wrap justify-center md:justify-start space-x-6 text-base">
+            <Link href="/about" legacyBehavior>
+              <a className="hover:text-red-600 transition">About</a>
+            </Link>
+            <Link href="/contact" legacyBehavior>
+              <a className="hover:text-red-600 transition">Contact</a>
+            </Link>
             <a href="#" className="hover:text-red-600 transition">Privacy</a>
             <a href="#" className="hover:text-red-600 transition">Terms</a>
           </div>
 
-          {/* Social Icons with Tooltip */}
-          <div className="flex space-x-6 relative">
+          {/* Social Icons */}
+          <div className="flex justify-center space-x-6">
             {/* Facebook */}
             <div className="relative group">
               <a
@@ -25,7 +30,7 @@ export default function Footer() {
               >
                 <FaFacebookF />
               </a>
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="hidden md:block absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                 Facebook
               </div>
             </div>
@@ -40,7 +45,7 @@ export default function Footer() {
               >
                 <FaInstagram />
               </a>
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="hidden md:block absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                 Instagram
               </div>
             </div>

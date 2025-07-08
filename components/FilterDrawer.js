@@ -42,7 +42,7 @@ export default function FilterDrawer({ filters, selectedFilters, onFilterChange 
           {Object.entries(filters).map(([filterKey, options]) => (
             <div key={filterKey}>
               <h3 className="text-[#1A2A6C] font-semibold mb-2 capitalize">
-                {filterKey === "shippingTime" ? "Time to Dispatch" : filterKey}
+                {filterKey === "tailoring" ? "Tailoring Options" : filterKey}
               </h3>
               <div className="flex flex-col space-y-2">
                 {options.map((option) => (
