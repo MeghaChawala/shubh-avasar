@@ -40,9 +40,9 @@ export default function ForgotPasswordForm({ switchTo, onClose }) {
 
   return (
     <>
-      <h2 className="text-2xl font-bold text-center mb-6 text-[#1A2A6C]">Reset Password</h2>
+      <h2 className="text-2xl font-bold text-center mb-6 text-[#1B263B]">Reset Password</h2>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 text-[#1A2A6C]">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 text-[#1B263B]">
         <input
           {...register("email", {
             required: "Email is required",
@@ -62,13 +62,13 @@ export default function ForgotPasswordForm({ switchTo, onClose }) {
 
         <button
           type="submit"
-          className="w-full bg-[#1A2A6C] text-white font-semibold py-3 rounded-md hover:bg-[#F76C6C] transition"
+          className="w-full bg-[#1B263B] text-white font-semibold py-3 rounded-md hover:bg-[#F76C6C] transition"
         >
           Send Reset Link
         </button>
       </form>
 
-      <p className="text-sm text-center mt-6 text-[#1A2A6C]">
+      <p className="text-sm text-center mt-6 text-[#1B263B]">
         Back to{" "}
         <button onClick={() => switchTo("login")} className="text-[#F76C6C] underline font-medium">
           Login

@@ -13,7 +13,7 @@ export default function HeroCarousel() {
       className="z-10"
     >
       <div>
-        <img src="https://placehold.co/1200x500/FFD700/000000?text=Big+Festival+Sale+%F0%9F%8E%89" alt="Slide 1" />
+        <img src="images/HB-banner_Desktop-min_19.webp" alt="Slide 1" />
       </div>
       <div>
         <img src="https://placehold.co/1200x500?text=New+Chaniya+Cholis+Launched" alt="Slide 2" />

@@ -1,69 +1,95 @@
 import { useState } from "react";
+import { FaTimes, FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 export default function FilterDrawer({ filters, selectedFilters, onFilterChange }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [openSections, setOpenSections] = useState({});
+
+  const toggleSection = (key) => {
+    setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
 
   return (
     <>
-      {/* Filter Toggle Button - visible only on mobile */}
+      {/* Toggle Button */}
       <button
-        className="md:hidden fixed bottom-4 right-4 z-50 bg-[#F76C6C] text-white px-4 py-2 rounded shadow-lg"
+        className="md:hidden fixed bottom-4 right-4 bg-[#F76C6C] text-white px-4 py-2 rounded-full shadow-lg z-50"
         onClick={() => setIsOpen(true)}
-        aria-label="Open Filters"
       >
         Filters
       </button>
 
       {/* Overlay */}
       <div
-        className={`fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity ${
+        className={`fixed inset-0 bg-black bg-opacity-40 z-40 transition-opacity ${
           isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
         onClick={() => setIsOpen(false)}
       />
 
-      {/* Drawer panel */}
+      {/* Drawer */}
       <aside
-        className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50 transform transition-transform
-          ${isOpen ? "translate-x-0" : "-translate-x-full"} md:hidden overflow-y-auto`}
+        className={`fixed top-0 right-0 h-full w-80 bg-white shadow-lg z-50 transform transition-transform ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        }`}
       >
-        <div className="p-4 border-b flex justify-between items-center">
-          <h2 className="text-lg font-semibold text-[#1A2A6C]">Filters</h2>
-          <button
-            onClick={() => setIsOpen(false)}
-            className="text-[#F76C6C] font-bold text-xl"
-            aria-label="Close Filters"
-          >
-            &times;
+        <div className="flex justify-between items-center p-4 border-b">
+          <h2 className="text-xl font-semibold text-[#1B263B]">Filters</h2>
+          <button onClick={() => setIsOpen(false)} aria-label="Close filters">
+            <FaTimes size={24} />
           </button>
         </div>
 
-        <div className="p-4 space-y-6">
-          {Object.entries(filters).map(([filterKey, options]) => (
-            <div key={filterKey}>
-              <h3 className="text-[#1A2A6C] font-semibold mb-2 capitalize">
-                {filterKey === "tailoring" ? "Tailoring Options" : filterKey}
-              </h3>
-              <div className="flex flex-col space-y-2">
-                {options.map((option) => (
-                  <label
-                    key={option}
-                    className="inline-flex items-center space-x-2 cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={selectedFilters[filterKey]?.includes(option) || false}
-                      onChange={(e) =>
-                        onFilterChange(filterKey, option, e.target.checked)
-                      }
-                      className="cursor-pointer"
-                    />
-                    <span className="text-[#1A2A6C]">{option}</span>
-                  </label>
-                ))}
-              </div>
+        <div className="overflow-y-auto flex-1 p-4 space-y-4">
+          {Object.entries(filters).map(([key, options]) => (
+            <div key={key} className="border-b pb-3">
+              <button
+                type="button"
+                onClick={() => toggleSection(key)}
+                className="flex justify-between w-full font-semibold text-[#1B263B] text-lg"
+              >
+                <span>{key.charAt(0).toUpperCase() + key.slice(1)}</span>
+                {openSections[key] ? <FaChevronUp /> : <FaChevronDown />}
+              </button>
+
+              {openSections[key] && (
+                <div className="mt-2 space-y-2">
+                  {options.map((option) => (
+                    <label
+                      key={option}
+                      className="flex items-center space-x-3 cursor-pointer"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedFilters[key]?.includes(option) || false}
+                        onChange={(e) =>
+                          onFilterChange(key, option, e.target.checked)
+                        }
+                        className="h-5 w-5 text-[#F76C6C] rounded"
+                      />
+                      <span className="text-gray-700">{option}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
+        </div>
+
+        <div className="p-4 border-t">
+          <button
+            className="w-full py-2 text-center bg-[#F76C6C] text-white font-semibold rounded hover:bg-red-600 transition"
+            onClick={() => {
+              Object.keys(filters).forEach((key) => {
+                selectedFilters[key]?.forEach((option) =>
+                  onFilterChange(key, option, false)
+                );
+              });
+              setIsOpen(false);
+            }}
+          >
+            Clear All
+          </button>
         </div>
       </aside>
     </>

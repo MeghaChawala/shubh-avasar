@@ -1,33 +1,39 @@
-export default function FiltersSidebar({ filters = {}, onFilterChange }) {
+export default function FiltersSidebar({ filters, selectedFilters, onFilterChange }) {
   return (
-    <aside className="w-full lg:w-64 space-y-6">
-      {Object.entries(filters).map(([filterKey, options]) => (
-        <div key={filterKey} className="pb-4 border-b border-gray-300">
-          <h3 className="text-lg font-semibold text-[#1A2A6C] capitalize mb-3">
-            {filterKey === "tailoring"
-              ? "Tailoring Options"
-              : filterKey}
-          </h3>
+    <div className="bg-white p-4 rounded shadow">
+      <h2 className="text-xl font-semibold mb-4 text-[#1B263B]">Filters</h2>
 
-          <div className="space-y-2">
-            {options.map((option) => (
-              <label key={option} className="flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="accent-[#F76C6C] w-4 h-4"
-                  value={option}
-                  onChange={(e) =>
-                    onFilterChange(filterKey, option, e.target.checked)
-                  }
-                />
-                <span className="ml-2 text-[#1A2A6C] hover:text-[#F76C6C] transition text-sm">
-                  {option}
-                </span>
-              </label>
-            ))}
+      {Object.entries(filters).map(([filterKey, options]) => {
+        if (!options.length) return null; // skip empty filters
+
+        return (
+          <div key={filterKey} className="mb-6">
+            <h3 className="font-semibold mb-2 capitalize text-[#1B263B]">{filterKey}</h3>
+            <div className="flex flex-wrap gap-2">
+              {options.map((option) => {
+                const isChecked = selectedFilters[filterKey]?.includes(option);
+
+                return (
+                  <label
+                    key={option}
+                    className={`cursor-pointer px-3 py-1 border rounded-full select-none
+                      ${isChecked ? "bg-[#F76C6C] text-white border-[#F76C6C]" : "bg-white text-gray-800 border-gray-300"}
+                    `}
+                  >
+                    <input
+                      type="checkbox"
+                      className="hidden"
+                      checked={isChecked}
+                      onChange={(e) => onFilterChange(filterKey, option, e.target.checked)}
+                    />
+                    {option}
+                  </label>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      ))}
-    </aside>
+        );
+      })}
+    </div>
   );
 }

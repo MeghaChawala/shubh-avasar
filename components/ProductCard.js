@@ -45,7 +45,7 @@ export default function ProductCard({ product }) {
         className="w-full overflow-hidden relative"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        style={{ height: 320 }}
+        style={{ height: 400 }}
       >
         <img
           src={images[currentImg]}
@@ -63,13 +63,13 @@ export default function ProductCard({ product }) {
           {isWished ? (
             <FaHeart className="text-[#F76C6C]" />
           ) : (
-            <FaRegHeart className="text-[#1A2A6C]" />
+            <FaRegHeart className="text-[#1B263B]" />
           )}
         </button>
       </div>
 
       <div className="px-3 py-2">
-        <h3 className="text-base font-medium text-[#1A2A6C] truncate">{product.name}</h3>
+        <h3 className="text-base font-medium text-[#1B263B] truncate">{product.name}</h3>
         <p className="text-gray-700 font-semibold mt-1">${product.price.toFixed(2)}</p>
       </div>
     </div>

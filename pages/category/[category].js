@@ -9,8 +9,9 @@ import Breadcrumb from "@/components/Breadcrumb";
 
 const PAGE_SIZE = 9;
 
-export default function ShopPage() {
+export default function CategoryPage() {
   const router = useRouter();
+  const { category } = router.query;
 
   const [filters, setFilters] = useState({
     price: ["Under $50", "$50 - $100", "Above $100"],
@@ -20,11 +21,8 @@ export default function ShopPage() {
     tailoring: [],
   });
 
-  const [productsData, setProductsData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [sortOption, setSortOption] = useState("newest");
-
+  const [productsData, setProductsData] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState({
     price: [],
     color: [],
@@ -34,20 +32,20 @@ export default function ShopPage() {
   });
 
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Load category from URL
+  // Set selected category from URL
   useEffect(() => {
-    const categoryFromQuery = router.query.category;
-
+    if (!category) return;
     setSelectedFilters((prev) => ({
       ...prev,
-      category: categoryFromQuery ? [categoryFromQuery] : [],
+      category: [category],
     }));
-
     setPage(1);
-  }, [router.query.category]);
+  }, [category]);
 
-  // Fetch products and generate filter options
+  // Fetch products and populate filters
   useEffect(() => {
     async function fetchProducts() {
       setLoading(true);
@@ -72,7 +70,6 @@ export default function ShopPage() {
             uniqueColors.add(clr);
             variant.sizes?.forEach((sz) => uniqueSizes.add(sz));
           });
-
           if (product.category) uniqueCategories.add(product.category);
           if (product.tailoring) uniqueTailoring.add(product.tailoring);
         });
@@ -109,17 +106,16 @@ export default function ShopPage() {
       return false;
 
     if (category.length > 0 && !category.includes(product.category)) return false;
-
     if (tailoring.length > 0 && !tailoring.includes(product.tailoring)) return false;
 
     if (color.length > 0 || size.length > 0) {
-      const matched = Object.entries(product.colorVariants || {}).some(
-        ([clr, variant]) => {
-          const colorMatch = color.length === 0 || color.includes(clr);
-          const sizeMatch = size.length === 0 || (variant.sizes || []).some((s) => size.includes(s));
-          return colorMatch && sizeMatch;
-        }
-      );
+      const matched = Object.entries(product.colorVariants || {}).some(([clr, variant]) => {
+        const colorMatch = color.length === 0 || color.includes(clr);
+        const sizeMatch = size.length === 0 || (variant.sizes || []).some((s) =>
+          size.includes(s)
+        );
+        return colorMatch && sizeMatch;
+      });
       if (!matched) return false;
     }
 
@@ -128,7 +124,7 @@ export default function ShopPage() {
 
   const totalPages = Math.ceil(filteredProducts.length / PAGE_SIZE);
 
-  // Sort products
+  // Sort logic
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     if (sortOption === "priceLowHigh") return a.price - b.price;
     if (sortOption === "priceHighLow") return b.price - a.price;
@@ -154,7 +150,6 @@ export default function ShopPage() {
         [filterKey]: updatedOptions,
       };
     });
-
     setPage(1);
   };
 
@@ -185,7 +180,7 @@ export default function ShopPage() {
         }
       />
 
-      <h1 className="text-3xl font-semibold text-[#1B263B] mb-8">
+      <h1 className="text-3xl font-semibold text-[#1B263B] mb-8 capitalize">
         {selectedFilters.category.length > 0
           ? `Shop: ${selectedFilters.category.join(", ")}`
           : isFiltered
@@ -203,7 +198,7 @@ export default function ShopPage() {
           />
         </div>
 
-        {/* Main Content: Sort + Drawer + Products */}
+        {/* Main Content: Sort + Products */}
         <div className="flex-1 flex flex-col">
           <FilterDrawer
             filters={filters}

@@ -7,7 +7,7 @@ export default function WishlistPage() {
 
   return (
     <div className="min-h-screen px-6 py-10 bg-[#F4F6F8]">
-      <h1 className="text-3xl font-semibold text-[#1A2A6C] mb-8">Your Wishlist</h1>
+      <h1 className="text-3xl font-semibold text-[#1B263B] mb-8">Your Wishlist</h1>
 
       {wishlist.length === 0 ? (
         <p>You have no items in your wishlist. <Link href="/shop" className="text-[#F76C6C] underline">Shop now</Link></p>

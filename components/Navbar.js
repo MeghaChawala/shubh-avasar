@@ -67,7 +67,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="bg-[#1A2A6C] text-white shadow-lg px-8 py-3 flex justify-between items-center sticky top-0 z-50 font-sans">
+      <nav className="bg-[#1B263B] text-white shadow-lg px-8 py-3 flex justify-between items-center sticky top-0 z-50 font-sans">
         {/* Brand */}
         <Link href="/" legacyBehavior>
           <a className="flex items-center">
@@ -91,7 +91,7 @@ export default function Navbar() {
             onMouseEnter={() => setShopOpen(true)}
             onMouseLeave={() => setShopOpen(false)}
           >
-            <span className="cursor-pointer select-none text-xl px-4 py-2 rounded-md hover:bg-[#F76C6C] hover:text-white transition">
+            <span className="cursor-pointer select-none text-xl px-4 py-2 rounded-md hover:blue hover:text-white transition">
               Shop
             </span>
             <div
@@ -101,36 +101,36 @@ export default function Navbar() {
                 }`}
             >
               <div>
-                <h3 className="font-bold text-[#1A2A6C] mb-3 border-b border-[#F76C6C] pb-1">
+                <h3 className="font-bold text-[#1B263B] mb-3 border-b border-[#a9747a] pb-1">
                   Men
                 </h3>
                 <ul className="space-y-2">
                   <li>
                     <Link href="/shop?category=Kurtas" legacyBehavior>
-                      <a className="hover:text-[#1A2A6C]">Kurtas</a>
+                      <a className="hover:text-[#1B263B]">Kurtas</a>
                     </Link>
                   </li>
                 </ul>
               </div>
 
               <div>
-                <h3 className="font-bold text-[#1A2A6C] mb-3 border-b border-[#F76C6C] pb-1">
+                <h3 className="font-bold text-[#1B263B] mb-3 border-b border-[#F76C6C] pb-1">
                   Women
                 </h3>
                 <ul className="space-y-2">
                   <li>
                     <Link href="/shop?category=Party%20Wear" legacyBehavior>
-                      <a className="hover:text-[#1A2A6C]">Party Wear</a>
+                      <a className="hover:text-[#1B263B]">Party Wear</a>
                     </Link>
                   </li>
                   <li>
                     <Link href="/shop?category=Navratri%20Collection" legacyBehavior>
-                      <a className="hover:text-[#1A2A6C]">Navratri Collection</a>
+                      <a className="hover:text-[#1B263B]">Navratri Collection</a>
                     </Link>
                   </li>
                   <li>
                     <Link href="/shop?category=T-Shirts" legacyBehavior>
-                      <a className="hover:text-[#1A2A6C]">T-Shirts</a>
+                      <a className="hover:text-[#1B263B]">T-Shirts</a>
                     </Link>
                   </li>
                 </ul>
@@ -171,7 +171,7 @@ export default function Navbar() {
               </button>
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-64 bg-white text-black rounded-md shadow-lg z-50 p-4">
-                  <h4 className="text-[#1A2A6C] font-bold mb-2">Order History</h4>
+                  <h4 className="text-[#1B263B] font-bold mb-2">Order History</h4>
                   {orders.length === 0 ? (
                     <p className="text-sm text-gray-500">No orders found.</p>
                   ) : (
@@ -202,12 +202,12 @@ export default function Navbar() {
           )}
 
           {/* Search */}
-          <div className="flex items-center bg-[#E7EEF9] rounded-full px-4 py-1 text-[#1A2A6C] w-48 focus-within:ring-2 focus-within:ring-[#F76C6C]">
+          <div className="flex items-center bg-[#E7EEF9] rounded-full px-4 py-1 text-[#1B263B] w-48 focus-within:ring-2 focus-within:ring-[#F76C6C]">
             <FaSearch />
             <input
               type="text"
               placeholder="Search products..."
-              className="ml-2 bg-transparent outline-none w-full text-sm font-medium placeholder-[#1A2A6C]"
+              className="ml-2 bg-transparent outline-none w-full text-sm font-medium placeholder-[#1B263B]"
             />
           </div>
         </div>
@@ -223,7 +223,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       <div
-        className={`md:hidden fixed top-[72px] left-0 right-0 bg-[#1A2A6C] text-white p-6 pt-[60px] space-y-6 shadow-xl transform transition-transform duration-300 z-40 max-h-[calc(100vh-72px)] overflow-auto ${mobileMenuOpen ? "translate-y-0" : "-translate-y-full"
+        className={`md:hidden fixed top-[72px] left-0 right-0 bg-[#1B263B] text-white p-6 pt-[60px] space-y-6 shadow-xl transform transition-transform duration-300 z-40 max-h-[calc(100vh-72px)] overflow-auto ${mobileMenuOpen ? "translate-y-0" : "-translate-y-full"
           }`}
       >
         {/* Shop Section */}
@@ -330,12 +330,12 @@ export default function Navbar() {
         )}
 
         {/* Search */}
-        <div className="flex items-center bg-[#E7EEF9] rounded-full px-4 py-2 text-[#1A2A6C] mt-4">
+        <div className="flex items-center bg-[#E7EEF9] rounded-full px-4 py-2 text-[#1B263B] mt-4">
           <FaSearch />
           <input
             type="text"
             placeholder="Search products..."
-            className="ml-2 bg-transparent outline-none w-full text-sm placeholder-[#1A2A6C]"
+            className="ml-2 bg-transparent outline-none w-full text-sm placeholder-[#1B263B]"
           />
         </div>
       </div>

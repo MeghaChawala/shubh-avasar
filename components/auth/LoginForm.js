@@ -64,9 +64,9 @@ export default function LoginForm({ switchTo, onClose }) {
 
   return (
     <>
-      <h2 className="text-2xl font-bold text-center mb-6 text-[#1A2A6C]">Login</h2>
+      <h2 className="text-2xl font-bold text-center mb-6 text-[#1B263B]">Login</h2>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 text-[#1A2A6C]">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 text-[#1B263B]">
         {/* Email */}
         <div>
           <input
@@ -103,7 +103,7 @@ export default function LoginForm({ switchTo, onClose }) {
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-3 text-gray-500 hover:text-[#1A2A6C]"
+            className="absolute right-3 top-3 text-gray-500 hover:text-[#1B263B]"
             tabIndex={-1}
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
@@ -124,7 +124,7 @@ export default function LoginForm({ switchTo, onClose }) {
 
         <button
           type="submit"
-          className="w-full bg-[#1A2A6C] text-white font-semibold py-3 rounded-md hover:bg-[#F76C6C] transition"
+          className="w-full bg-[#1B263B] text-white font-semibold py-3 rounded-md hover:bg-[#F76C6C] transition"
           disabled={!!successMsg}
         >
           Login
@@ -139,10 +139,10 @@ export default function LoginForm({ switchTo, onClose }) {
         className="flex items-center justify-center gap-2 w-full border border-gray-300 py-3 rounded-md hover:bg-[#f0f4fa] transition"
       >
         <FaGoogle className="text-[#EA4335]" />
-        <span className="text-[#1A2A6C] font-medium">Continue with Google</span>
+        <span className="text-[#1B263B] font-medium">Continue with Google</span>
       </button>
 
-      <p className="text-sm text-center mt-6 text-[#1A2A6C]">
+      <p className="text-sm text-center mt-6 text-[#1B263B]">
         Don't have an account?{" "}
         <button
           onClick={() => switchTo("signup")}
@@ -153,7 +153,7 @@ export default function LoginForm({ switchTo, onClose }) {
         </button>
       </p>
 
-      <p className="text-sm text-center mt-2 text-[#1A2A6C]">
+      <p className="text-sm text-center mt-2 text-[#1B263B]">
         <button
           onClick={() => switchTo("forgot")}
           className="text-[#F76C6C] underline font-medium"
