@@ -13,6 +13,7 @@ import {
   FaChevronUp,
 } from "react-icons/fa";
 import { useWishlist } from "@/context/WishlistContext";
+import { useCart } from "@/context/CartContext"; // ✅ Added CartContext import
 import { auth, db } from "@/lib/firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { collection, query, where, getDocs } from "firebase/firestore";
@@ -26,6 +27,7 @@ export default function Navbar() {
   const [orders, setOrders] = useState([]);
 
   const { wishlist } = useWishlist();
+  const { cartItems } = useCart(); // ✅ Access cart items
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -82,7 +84,6 @@ export default function Navbar() {
           </a>
         </Link>
 
-
         {/* Desktop Nav */}
         <div className="hidden md:flex space-x-8 items-center relative font-semibold">
           {/* Shop Dropdown */}
@@ -95,10 +96,11 @@ export default function Navbar() {
               Shop
             </span>
             <div
-              className={`absolute top-full left-0 mt-2 bg-white rounded-lg shadow-2xl text-black p-6 w-96 grid grid-cols-2 gap-6 transition-transform duration-300 origin-top ${shopOpen
+              className={`absolute top-full left-0 mt-2 bg-white rounded-lg shadow-2xl text-black p-6 w-96 grid grid-cols-2 gap-6 transition-transform duration-300 origin-top ${
+                shopOpen
                   ? "scale-100 opacity-100"
                   : "scale-95 opacity-0 pointer-events-none"
-                }`}
+              }`}
             >
               <div>
                 <h3 className="font-bold text-[#1B263B] mb-3 border-b border-[#a9747a] pb-1">
@@ -151,11 +153,16 @@ export default function Navbar() {
             </a>
           </Link>
 
-          {/* Cart */}
+          {/* Cart with count badge */}
           <Link href="/cart" legacyBehavior>
-            <a className="flex items-center gap-2 text-xl px-4 py-2 rounded-md hover:bg-[#F76C6C] transition">
+            <a className="relative flex items-center gap-2 text-xl px-4 py-2 rounded-md hover:bg-[#F76C6C] transition">
               <FaShoppingCart className="w-5 h-5 self-center" />
               <span className="leading-none">Cart</span>
+              {cartItems.length > 0 && (
+                <span className="absolute -top-1 -right-2 bg-[#F76C6C] text-white text-xs px-2 py-0.5 rounded-full">
+                  {cartItems.length}
+                </span>
+              )}
             </a>
           </Link>
 
@@ -223,8 +230,9 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       <div
-        className={`md:hidden fixed top-[72px] left-0 right-0 bg-[#1B263B] text-white p-6 pt-[60px] space-y-6 shadow-xl transform transition-transform duration-300 z-40 max-h-[calc(100vh-72px)] overflow-auto ${mobileMenuOpen ? "translate-y-0" : "-translate-y-full"
-          }`}
+        className={`md:hidden fixed top-[72px] left-0 right-0 bg-[#1B263B] text-white p-6 pt-[60px] space-y-6 shadow-xl transform transition-transform duration-300 z-40 max-h-[calc(100vh-72px)] overflow-auto ${
+          mobileMenuOpen ? "translate-y-0" : "-translate-y-full"
+        }`}
       >
         {/* Shop Section */}
         <details className="group border-b border-[#F76C6C] pb-2" open>
@@ -283,12 +291,16 @@ export default function Navbar() {
           </a>
         </Link>
 
-
-        {/* Cart */}
+        {/* Cart with count badge */}
         <Link href="/cart" legacyBehavior>
-          <a onClick={handleMobileLinkClick} className="flex gap-2 text-lg hover:text-[#F76C6C]">
-            <FaShoppingCart className="w-5 h-5 self-center" />
-            <span className="leading-none">Cart</span>
+          <a onClick={handleMobileLinkClick} className="relative flex items-center gap-2 text-lg hover:text-[#F76C6C]">
+            <FaShoppingCart className="text-xl" />
+            <span>Cart</span>
+            {cartItems.length > 0 && (
+              <span className="ml-2 bg-[#F76C6C] text-white text-xs px-2 py-0.5 rounded-full">
+                {cartItems.length}
+              </span>
+            )}
           </a>
         </Link>
 

@@ -16,15 +16,22 @@ export default function LoginForm({ switchTo, onClose }) {
   const [successMsg, setSuccessMsg] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  const redirectAfterLogin = () => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const redirectTo = searchParams.get("redirectTo") || "/";
+    setTimeout(() => {
+      onClose?.(); // Only call if available (optional modal support)
+      window.location.href = redirectTo;
+    }, 1000);
+  };
+
   const onSubmit = async (data) => {
     setFirebaseError("");
     setSuccessMsg("");
     try {
       await signInWithEmailAndPassword(auth, data.email, data.password);
       setSuccessMsg("Logged in successfully!");
-      setTimeout(() => {
-        onClose();
-      }, 1000);
+      redirectAfterLogin();
     } catch (err) {
       if (err.code === "auth/user-not-found") {
         setFirebaseError("Email not registered.");
@@ -54,9 +61,7 @@ export default function LoginForm({ switchTo, onClose }) {
       }
 
       setSuccessMsg("Logged in with Google!");
-      setTimeout(() => {
-        onClose();
-      }, 1000);
+      redirectAfterLogin();
     } catch (err) {
       setFirebaseError("Google login failed. Please try again.");
     }

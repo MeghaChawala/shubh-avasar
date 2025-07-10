@@ -1,4 +1,3 @@
-// pages/api/contact.js
 import nodemailer from 'nodemailer';
 
 export default async function handler(req, res) {
@@ -6,30 +5,32 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  const { name, email, message } = req.body;
+  const { name, email, message, phone } = req.body;
 
   if (!name || !email || !message) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
 
-  // Setup transporter using Gmail
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: process.env.EMAIL_USER,   // yourbusiness@gmail.com
+      user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
   });
+
+  // Optional phone text
+  const phoneText = phone ? `Phone: ${phone}\n` : '';
 
   // Email to business
   const businessMail = {
     from: `"Shubh Avasar Website" <${process.env.EMAIL_USER}>`,
     to: process.env.EMAIL_TO,
     subject: `Enquiry from ${name}`,
-    text: `📩 New enquiry submitted:\n\nName: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+    text: `📩 New enquiry submitted:\n\nName: ${name}\nEmail: ${email}\n${phoneText}\nMessage:\n${message}`,
   };
 
-  // Email to sender (confirmation)
+  // Email to sender
   const confirmationMail = {
     from: `"Shubh Avasar" <${process.env.EMAIL_USER}>`,
     to: email,
@@ -38,7 +39,6 @@ export default async function handler(req, res) {
   };
 
   try {
-    // Send both emails
     await Promise.all([
       transporter.sendMail(businessMail),
       transporter.sendMail(confirmationMail),

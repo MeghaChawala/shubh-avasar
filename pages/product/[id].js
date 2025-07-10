@@ -4,8 +4,18 @@ import { db } from "@/lib/firebase";
 import { useEffect, useState, useRef } from "react";
 import Breadcrumb from "@/components/Breadcrumb";
 import ProductCard from "@/components/ProductCard";
-import { FaHeart, FaRegHeart, FaWhatsapp, FaFacebookF, FaInstagram, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import {
+  FaHeart,
+  FaRegHeart,
+  FaWhatsapp,
+  FaFacebookF,
+  FaInstagram,
+  FaChevronLeft,
+  FaChevronRight,
+} from "react-icons/fa";
 import { useWishlist } from "@/context/WishlistContext";
+import { useCart } from "@/context/CartContext";
+import { toast } from "react-hot-toast";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -19,7 +29,6 @@ export default function ProductDetail() {
   const [currentImg, setCurrentImg] = useState(0);
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
-  const [error, setError] = useState("");
 
   const [colorVariants, setColorVariants] = useState({});
   const [availableSizes, setAvailableSizes] = useState([]);
@@ -27,6 +36,8 @@ export default function ProductDetail() {
 
   const { wishlist, toggleWishlist } = useWishlist();
   const isWished = wishlist.some((item) => item.id === product?.id);
+
+  const { addToCart } = useCart();
 
   const zoomContainerRef = useRef(null);
   const zoomImageRef = useRef(null);
@@ -83,9 +94,7 @@ export default function ProductDetail() {
 
     const handleScroll = () => {
       setShowLeftArrow(container.scrollLeft > 0);
-      setShowRightArrow(
-        container.scrollLeft + container.offsetWidth < container.scrollWidth
-      );
+      setShowRightArrow(container.scrollLeft + container.offsetWidth < container.scrollWidth);
     };
 
     handleScroll();
@@ -161,11 +170,7 @@ export default function ProductDetail() {
               className="absolute top-4 right-4 bg-white shadow p-2 rounded-full z-10 hover:bg-gray-100"
               aria-label={isWished ? "Remove from wishlist" : "Add to wishlist"}
             >
-              {isWished ? (
-                <FaHeart className="text-[#F76C6C]" />
-              ) : (
-                <FaRegHeart className="text-[#1B263B]" />
-              )}
+              {isWished ? <FaHeart className="text-[#F76C6C]" /> : <FaRegHeart className="text-[#1B263B]" />}
             </button>
           </div>
         </div>
@@ -175,6 +180,7 @@ export default function ProductDetail() {
           <h1 className="text-3xl font-bold text-[#1B263B]">{product.name}</h1>
           <p className="text-2xl text-[#F76C6C] font-semibold">${product.price.toFixed(2)}</p>
 
+          {/* Color selection */}
           {Object.keys(colorVariants).length > 0 && (
             <div>
               <h4 className="font-semibold mb-1">Select Color:</h4>
@@ -189,9 +195,7 @@ export default function ProductDetail() {
                       setCurrentImg(0);
                     }}
                     className={`px-3 py-1 rounded-full border ${
-                      color === selectedColor
-                        ? "bg-[#F76C6C] text-white"
-                        : "bg-white text-black"
+                      color === selectedColor ? "bg-[#F76C6C] text-white" : "bg-white text-black"
                     }`}
                   >
                     {color}
@@ -201,6 +205,7 @@ export default function ProductDetail() {
             </div>
           )}
 
+          {/* Size selection */}
           {availableSizes.length > 0 && (
             <div>
               <h4 className="font-semibold mb-1">Select Size:</h4>
@@ -210,9 +215,7 @@ export default function ProductDetail() {
                     key={size}
                     onClick={() => setSelectedSize(size)}
                     className={`px-3 py-1 rounded-full border ${
-                      size === selectedSize
-                        ? "bg-[#F76C6C] text-white"
-                        : "bg-white text-black"
+                      size === selectedSize ? "bg-[#F76C6C] text-white" : "bg-white text-black"
                     }`}
                   >
                     {size}
@@ -222,27 +225,19 @@ export default function ProductDetail() {
             </div>
           )}
 
-          {/* Out of Stock & Error */}
-          {product.quantity === 0 && (
-            <p className="text-red-600 font-semibold">Out of Stock</p>
-          )}
-          {error && <p className="text-red-600 font-medium">{error}</p>}
-
-          {/* Add to Cart Button */}
+          {/* Add to Cart */}
           <button
             disabled={product.quantity === 0}
             onClick={() => {
               if (product.quantity === 0) return;
+
               if (!selectedColor || !selectedSize) {
-                setError("Please select both color and size.");
-              } else {
-                setError("");
-                console.log("Add to cart:", {
-                  productId: product.id,
-                  selectedColor,
-                  selectedSize,
-                });
+                toast.error("Please select both color and size.");
+                return;
               }
+
+              addToCart(product, selectedColor, selectedSize);
+              toast.success("Added to cart!");
             }}
             className="mt-6 bg-[#F76C6C] text-white px-6 py-3 rounded hover:bg-red-600 transition disabled:opacity-50"
           >
@@ -287,7 +282,7 @@ export default function ProductDetail() {
         </div>
       </div>
 
-      {/* Similar Products Section */}
+      {/* Similar Products */}
       {similarProducts.length > 0 && (
         <section className="max-w-7xl mx-auto mt-12 px-4">
           <div className="mb-6 px-2">
@@ -311,15 +306,9 @@ export default function ProductDetail() {
               </button>
             )}
 
-            <div
-              ref={scrollRef}
-              className="flex overflow-x-auto gap-4 sm:gap-6 scroll-smooth hide-scrollbar pb-2"
-            >
+            <div ref={scrollRef} className="flex overflow-x-auto gap-4 sm:gap-6 scroll-smooth hide-scrollbar pb-2">
               {similarProducts.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex-shrink-0 w-[80vw] sm:w-[45vw] md:w-[280px] lg:w-[300px]"
-                >
+                <div key={item.id} className="flex-shrink-0 w-[80vw] sm:w-[45vw] md:w-[280px] lg:w-[300px]">
                   <ProductCard product={item} />
                 </div>
               ))}
