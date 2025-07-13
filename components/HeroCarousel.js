@@ -16,10 +16,10 @@ export default function HeroCarousel() {
         <img src="images/HB-banner_Desktop-min_19.webp" alt="Slide 1" />
       </div>
       <div>
-        <img src="https://placehold.co/1200x500?text=New+Chaniya+Cholis+Launched" alt="Slide 2" />
+        <img src="images/c2.jpeg" alt="Slide 2" />
       </div>
       <div>
-        <img src="https://placehold.co/1200x500?text=Men's+Kurta+Collection" alt="Slide 3" />
+        <img src="images/c4.png" alt="Slide 3" />
       </div>
     </Carousel>
   );

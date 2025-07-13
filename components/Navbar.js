@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import AuthModal from "./AuthModal";
+import { useRouter } from "next/router";
 import {
   FaHeart,
   FaShoppingCart,
@@ -28,7 +29,8 @@ export default function Navbar() {
 
   const { wishlist } = useWishlist();
   const { cartItems } = useCart(); // ✅ Access cart items
-
+  const router = useRouter();
+  const isCheckoutPage = router.pathname === "/checkout";
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
@@ -96,11 +98,10 @@ export default function Navbar() {
               Shop
             </span>
             <div
-              className={`absolute top-full left-0 mt-2 bg-white rounded-lg shadow-2xl text-black p-6 w-96 grid grid-cols-2 gap-6 transition-transform duration-300 origin-top ${
-                shopOpen
+              className={`absolute top-full left-0 mt-2 bg-white rounded-lg shadow-2xl text-black p-6 w-96 grid grid-cols-2 gap-6 transition-transform duration-300 origin-top ${shopOpen
                   ? "scale-100 opacity-100"
                   : "scale-95 opacity-0 pointer-events-none"
-              }`}
+                }`}
             >
               <div>
                 <h3 className="font-bold text-[#1B263B] mb-3 border-b border-[#a9747a] pb-1">
@@ -190,12 +191,15 @@ export default function Navbar() {
                       ))}
                     </ul>
                   )}
-                  <button
-                    onClick={handleLogout}
-                    className="mt-4 w-full bg-[#F76C6C] text-white py-2 rounded hover:bg-[#d85757] transition"
-                  >
-                    Logout
-                  </button>
+                  {!isCheckoutPage && (
+                    <button
+                      onClick={handleLogout}
+                      className="mt-4 w-full bg-[#F76C6C] text-white py-2 rounded hover:bg-[#d85757] transition"
+                    >
+                      Logout
+                    </button>
+                  )}
+
                 </div>
               )}
             </div>
@@ -230,9 +234,8 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       <div
-        className={`md:hidden fixed top-[72px] left-0 right-0 bg-[#1B263B] text-white p-6 pt-[60px] space-y-6 shadow-xl transform transition-transform duration-300 z-40 max-h-[calc(100vh-72px)] overflow-auto ${
-          mobileMenuOpen ? "translate-y-0" : "-translate-y-full"
-        }`}
+        className={`md:hidden fixed top-[72px] left-0 right-0 bg-[#1B263B] text-white p-6 pt-[60px] space-y-6 shadow-xl transform transition-transform duration-300 z-40 max-h-[calc(100vh-72px)] overflow-auto ${mobileMenuOpen ? "translate-y-0" : "-translate-y-full"
+          }`}
       >
         {/* Shop Section */}
         <details className="group border-b border-[#F76C6C] pb-2" open>
@@ -322,12 +325,15 @@ export default function Navbar() {
                 ))}
               </ul>
             )}
-            <button
-              onClick={handleLogout}
-              className="w-full bg-[#F76C6C] text-white py-2 rounded hover:bg-[#d85757]"
-            >
-              Logout
-            </button>
+            {!isCheckoutPage && (
+              <button
+                onClick={handleLogout}
+                className="w-full bg-[#F76C6C] text-white py-2 rounded hover:bg-[#d85757]"
+              >
+                Logout
+              </button>
+            )}
+
           </div>
         ) : (
           <button

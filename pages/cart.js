@@ -51,6 +51,17 @@ export default function CartPage() {
     return () => container.removeEventListener("scroll", handleScroll);
   }, [recommendedProducts]);
 
+  const scroll = (direction) => {
+  const container = scrollRef.current;
+  if (container) {
+    const scrollAmount = container.offsetWidth;
+    container.scrollBy({
+      left: direction === "left" ? -scrollAmount : scrollAmount,
+      behavior: "smooth",
+    });
+  }
+};
+
   const handleCheckout = () => {
     if (cartItems.length === 0) {
       toast.error("Cart is empty");

@@ -1,9 +1,22 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
+
+  // Load cart from localStorage on page load
+  useEffect(() => {
+    const storedCart = localStorage.getItem("cartItems");
+    if (storedCart) {
+      setCartItems(JSON.parse(storedCart));
+    }
+  }, []);
+
+  // Save cart to localStorage on every change
+  useEffect(() => {
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }, [cartItems]);
 
   const addToCart = (product, selectedColor, selectedSize) => {
     const existingItemIndex = cartItems.findIndex(
@@ -14,12 +27,10 @@ export function CartProvider({ children }) {
     );
 
     if (existingItemIndex !== -1) {
-      // If item exists, increase quantity
       const updatedCart = [...cartItems];
       updatedCart[existingItemIndex].qty += 1;
       setCartItems(updatedCart);
     } else {
-      // New item
       setCartItems((prev) => [
         ...prev,
         {
@@ -62,7 +73,10 @@ export function CartProvider({ children }) {
     );
   };
 
-  const clearCart = () => setCartItems([]);
+  const clearCart = () => {
+    setCartItems([]);
+    localStorage.removeItem("cartItems");
+  };
 
   return (
     <CartContext.Provider
