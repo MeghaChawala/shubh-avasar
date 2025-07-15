@@ -48,6 +48,14 @@ export default function ProductDetail() {
   const [showRightArrow, setShowRightArrow] = useState(true);
 
   const shareUrl = typeof window !== "undefined" ? window.location.href : "";
+  // Helper: detect if url is video by extension
+  const isVideo = (url) => {
+    if (!url) return false;
+    // Remove query params like ?alt=media&token=...
+    const cleanUrl = url.split("?")[0];
+    return /\.(mp4|webm|ogg|mov)$/i.test(cleanUrl);
+  };
+
 
   useEffect(() => {
     if (!id) return;
@@ -127,8 +135,10 @@ export default function ProductDetail() {
   const images = colorImage
     ? [colorImage]
     : product.images?.length
-    ? product.images
-    : [product.image];
+      ? product.images
+      : [product.image];
+  const currentMedia = images[currentImg];
+  const zoomAllowed = !isVideo(currentMedia); // disable zoom on video
 
   return (
     <div className="min-h-screen px-4 md:px-8 py-10 bg-[#F4F6F8]">
@@ -137,34 +147,73 @@ export default function ProductDetail() {
       <div className="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-lg grid md:grid-cols-2 gap-10">
         {/* LEFT: Images */}
         <div className="flex gap-4">
-          <div className="flex flex-col gap-3 overflow-y-auto max-h-[500px]">
-            {images.map((img, i) => (
-              <img
-                key={i}
-                src={img}
-                onClick={() => setCurrentImg(i)}
-                className={`w-16 h-16 object-contain rounded border cursor-pointer ${
-                  i === currentImg ? "border-[#F76C6C]" : "border-gray-300"
-                }`}
-              />
-            ))}
+          <div className="flex flex-col gap-3 max-h-[500px] overflow-y-auto hide-scrollbar">
+  {images.map((url, i) => {
+    const video = isVideo(url);
+
+    return (
+      <div
+        key={i}
+        onClick={() => setCurrentImg(i)}
+        className={`relative w-16 h-16 rounded border cursor-pointer overflow-hidden group ${
+          i === currentImg ? "border-[#F76C6C]" : "border-gray-300"
+        }`}
+      >
+        {/* Thumbnail or placeholder */}
+        <img
+          src={video ? "/video-placeholder.png" : url}
+          alt={`Media ${i}`}
+          className="object-cover w-full h-full"
+          draggable={false}
+        />
+
+        {/* Amazon-style play icon overlay */}
+        {video && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="bg-black bg-opacity-50 rounded-full p-2 group-hover:scale-105 transition-transform duration-200">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-5 h-5 text-white"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </div>
           </div>
+        )}
+      </div>
+    );
+  })}
+</div>
+
+
 
           <div
             ref={zoomContainerRef}
-            className="relative w-full max-h-[600px] rounded overflow-hidden cursor-zoom-in"
-            onMouseMove={isZoomed ? handleMouseMove : undefined}
-            onMouseEnter={() => setIsZoomed(true)}
-            onMouseLeave={() => setIsZoomed(false)}
+            className={`relative w-full max-h-[600px] rounded overflow-hidden ${zoomAllowed ? "cursor-zoom-in" : ""}`}
+            onMouseMove={zoomAllowed && isZoomed ? handleMouseMove : undefined}
+            onMouseEnter={() => zoomAllowed && setIsZoomed(true)}
+            onMouseLeave={() => zoomAllowed && setIsZoomed(false)}
           >
-            <img
-              ref={zoomImageRef}
-              src={images[currentImg]}
-              alt={product.name}
-              className="w-full h-full object-contain transition-transform duration-300 select-none"
-              style={{ transform: isZoomed ? "scale(3)" : "scale(1)" }}
-              draggable={false}
-            />
+            {isVideo(currentMedia) ? (
+              <video
+                key={currentMedia}
+                src={currentMedia}
+                controls
+                className="w-full h-full object-contain rounded"
+              />
+            ) : (
+              <img
+                ref={zoomImageRef}
+                src={currentMedia}
+                alt={product.name}
+                className="w-full h-full object-contain transition-transform duration-300 select-none"
+                style={{ transform: isZoomed ? "scale(3)" : "scale(1)" }}
+                draggable={false}
+              />
+            )}
+
             <button
               onClick={() => toggleWishlist(product)}
               className="absolute top-4 right-4 bg-white shadow p-2 rounded-full z-10 hover:bg-gray-100"
@@ -194,9 +243,8 @@ export default function ProductDetail() {
                       setColorImage(info.image || "");
                       setCurrentImg(0);
                     }}
-                    className={`px-3 py-1 rounded-full border ${
-                      color === selectedColor ? "bg-[#F76C6C] text-white" : "bg-white text-black"
-                    }`}
+                    className={`px-3 py-1 rounded-full border ${color === selectedColor ? "bg-[#F76C6C] text-white" : "bg-white text-black"
+                      }`}
                   >
                     {color}
                   </button>
@@ -214,9 +262,8 @@ export default function ProductDetail() {
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
-                    className={`px-3 py-1 rounded-full border ${
-                      size === selectedSize ? "bg-[#F76C6C] text-white" : "bg-white text-black"
-                    }`}
+                    className={`px-3 py-1 rounded-full border ${size === selectedSize ? "bg-[#F76C6C] text-white" : "bg-white text-black"
+                      }`}
                   >
                     {size}
                   </button>
@@ -224,6 +271,18 @@ export default function ProductDetail() {
               </div>
             </div>
           )}
+          {selectedSize === "Custom Size" && (
+            <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-md text-sm text-[#7C3D1D]">
+              Custom sizes available up to <strong>42&quot;</strong>. Extra charges will apply at checkout.<br />
+              For personalized sizing, <a href="https://wa.me/18073583637" target="_blank" rel="noreferrer" className="text-[#25D366] font-semibold underline">message us on WhatsApp</a>.
+            </div>
+          )}
+          {selectedSize === "Free Size" && (
+            <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-md text-sm text-[#7C3D1D]">
+              Heads up! Free Size is stitched at <strong>38&quot;</strong>
+            </div>
+          )}
+
 
           {/* Add to Cart */}
           <button

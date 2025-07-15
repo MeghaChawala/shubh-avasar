@@ -19,7 +19,7 @@ export default function HeroCarousel() {
         <img src="images/c2.jpeg" alt="Slide 2" />
       </div>
       <div>
-        <img src="images/c4.png" alt="Slide 3" />
+        <img src="images/c5.png" alt="Slide 3" />
       </div>
     </Carousel>
   );

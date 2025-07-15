@@ -12,7 +12,19 @@ import AuthModal from "@/components/AuthModal";
 
 export default function CartPage() {
   const { cartItems = [], updateQuantity, removeFromCart, clearCart } = useCart();
-  const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
+
+  const CUSTOM_SIZE_CHARGE = 15;
+
+  // Calculate customization total
+  const customizationTotal = cartItems.reduce((sum, item) => {
+    return sum + (item.selectedSize.toLowerCase() === "custom size" ? CUSTOM_SIZE_CHARGE * item.qty : 0);
+  }, 0);
+
+  // Calculate base total (without customization)
+  const baseTotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
+
+  // Total price including customization charge
+  const totalPrice = baseTotal + customizationTotal;
 
   const [recommendedProducts, setRecommendedProducts] = useState([]);
   const scrollRef = useRef(null);
@@ -52,15 +64,15 @@ export default function CartPage() {
   }, [recommendedProducts]);
 
   const scroll = (direction) => {
-  const container = scrollRef.current;
-  if (container) {
-    const scrollAmount = container.offsetWidth;
-    container.scrollBy({
-      left: direction === "left" ? -scrollAmount : scrollAmount,
-      behavior: "smooth",
-    });
-  }
-};
+    const container = scrollRef.current;
+    if (container) {
+      const scrollAmount = container.offsetWidth;
+      container.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
 
   const handleCheckout = () => {
     if (cartItems.length === 0) {
@@ -123,8 +135,12 @@ export default function CartPage() {
                       Color: <span className="capitalize">{item.selectedColor}</span>, Size:{" "}
                       {item.selectedSize}
                     </p>
+                    {/* Mobile price with customization */}
                     <p className="text-base font-semibold text-[#1B263B] mt-1 md:hidden">
                       ${(item.price * item.qty).toFixed(2)}
+                      {item.selectedSize.toLowerCase() === "custom" && (
+                        <span> + ${(CUSTOM_SIZE_CHARGE * item.qty).toFixed(2)} (Customization)</span>
+                      )}
                     </p>
                   </div>
                   <div className="flex items-center justify-between mt-4">
@@ -149,8 +165,9 @@ export default function CartPage() {
                         +
                       </button>
                     </div>
+                    {/* Desktop price with customization */}
                     <p className="font-semibold text-lg hidden md:block">
-                      ${(item.price * item.qty).toFixed(2)}
+                      ${((item.price + (item.selectedSize.toLowerCase() === "custom" ? CUSTOM_SIZE_CHARGE : 0)) * item.qty).toFixed(2)}
                     </p>
                     <button
                       onClick={() => {
@@ -173,7 +190,12 @@ export default function CartPage() {
 
             <div className="text-lg text-[#1B263B] flex justify-between">
               <span>Subtotal:</span>
-              <span className="font-semibold">${totalPrice.toFixed(2)}</span>
+              <span className="font-semibold">${baseTotal.toFixed(2)}</span>
+            </div>
+
+            <div className="text-lg text-[#1B263B] flex justify-between">
+              <span>Customization Charges:</span>
+              <span className="font-semibold">${customizationTotal.toFixed(2)}</span>
             </div>
 
             <div className="text-lg text-[#1B263B] flex justify-between">

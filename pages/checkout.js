@@ -4,6 +4,7 @@ import { auth } from "@/lib/firebase";
 import Image from "next/image";
 import { toast } from "react-hot-toast";
 import { onAuthStateChanged } from "firebase/auth";
+import { loadStripe } from "@stripe/stripe-js";
 
 export default function CheckoutPage() {
   const { cartItems, clearCart } = useCart();
@@ -21,8 +22,9 @@ export default function CheckoutPage() {
 
   const [errors, setErrors] = useState({});
   const FIRST_ORDER_DISCOUNT_RATE = 0.1;
+  const CUSTOM_SIZE_CHARGE = 15;
   const [shippingFee, setShippingFee] = useState(0);
-
+  const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user?.email) {
@@ -51,14 +53,18 @@ export default function CheckoutPage() {
       // Add more states as needed
     ],
   };
-
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
-  const discount = subtotal * FIRST_ORDER_DISCOUNT_RATE;
-  const discountedSubtotal = subtotal - discount;
-  const tax = discountedSubtotal * 0.13;
-  const grandTotal = discountedSubtotal + tax + shippingFee;
-
   const isGTA = (postal) => postal.trim().toUpperCase().startsWith("M");
+
+  const customizationTotal = cartItems.reduce((sum, item) => {
+    return sum + (item.selectedSize?.toLowerCase() === "custom size" ? CUSTOM_SIZE_CHARGE * item.qty : 0);
+  }, 0);
+
+  const baseSubtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const discount = baseSubtotal * FIRST_ORDER_DISCOUNT_RATE;
+  const subtotal = baseSubtotal + customizationTotal + shippingFee;
+  const discountedSubtotal = subtotal - discount;
+  const tax = subtotal * 0.13;
+  const grandTotal = discountedSubtotal + tax;
 
   useEffect(() => {
     if (deliveryInfo.postalCode) {
@@ -104,14 +110,37 @@ export default function CheckoutPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handlePlaceOrder = () => {
+
+const [isProcessing, setIsProcessing] = useState(false);
+  const handlePayment = async () => {
+    // Validate form before proceeding to Stripe
     if (!validateForm()) {
       toast.error("Please fill in all required fields correctly.");
       return;
     }
-    toast.success("Order placed successfully!");
-    clearCart();
-  };
+  // const requiredFields = ["fullName", "email", "phone", "address", "city", "province", "country", "postalCode"];
+  // const missing = requiredFields.filter((key) => !deliveryInfo[key]?.trim());
+  // if (missing.length) {
+  //   toast.error("Please fill all required delivery fields.");
+  //   return;
+  // }
+setIsProcessing(true);
+  const res = await fetch("/api/create-checkout-session", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ cartItems, deliveryInfo }),
+  });
+
+  const data = await res.json();
+  if (data.error) {
+    toast.error("Payment failed. Try again.");
+    setIsProcessing(false);
+    return;
+  }
+
+  const stripe = await stripePromise;
+  await stripe.redirectToCheckout({ sessionId: data.id });
+};
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] px-4 py-10">
@@ -154,7 +183,15 @@ export default function CheckoutPage() {
           <div className="mt-6 space-y-2 text-[#1B263B]">
             <div className="flex justify-between">
               <span>Subtotal:</span>
-              <span>${subtotal.toFixed(2)}</span>
+              <span>${baseSubtotal.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Customization Charges:</span>
+              <span>${customizationTotal.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Shipping Fee:</span>
+              <span>{shippingFee === 0 ? "Free" : `$${shippingFee.toFixed(2)}`}</span>
             </div>
             <div className="flex justify-between">
               <span>First Order Discount:</span>
@@ -164,10 +201,7 @@ export default function CheckoutPage() {
               <span>Tax (13% HST):</span>
               <span>${tax.toFixed(2)}</span>
             </div>
-            <div className="flex justify-between">
-              <span>Shipping Fee:</span>
-              <span>{shippingFee === 0 ? "Free" : `$${shippingFee.toFixed(2)}`}</span>
-            </div>
+
             <hr className="border-t my-2" />
             <div className="flex justify-between font-bold text-lg">
               <span>Grand Total:</span>
@@ -295,9 +329,15 @@ export default function CheckoutPage() {
             </div>
 
             <button
-              onClick={handlePlaceOrder}
-              className="w-full bg-[#F76C6C] text-white py-3 rounded hover:bg-red-600 transition"
-            >
+              onClick={handlePayment}
+              disabled={isProcessing}
+             className={`w-full py-3 rounded transition ${
+    isProcessing
+      ? "bg-gray-400 cursor-not-allowed"
+      : "bg-[#F76C6C] text-white hover:bg-red-600"
+  }`}
+>
+  {isProcessing ? "Processing..." : ""}
               Place Order
             </button>
           </div>

@@ -14,8 +14,11 @@ export default function Footer() {
             <Link href="/contact" legacyBehavior>
               <a className="hover:text-red-600 transition">Contact</a>
             </Link>
-            <a href="#" className="hover:text-red-600 transition">Privacy</a>
-            <a href="#" className="hover:text-red-600 transition">Terms</a>
+            <Link href="/legal" legacyBehavior>
+              <a className="hover:text-red-600 transition">Privacy & Terms</a>
+            </Link>
+            {/* <a href="#" className="hover:text-red-600 transition">Privacy</a>
+            <a href="#" className="hover:text-red-600 transition">Terms</a> */}
           </div>
 
           {/* Social Icons */}
@@ -54,6 +57,18 @@ export default function Footer() {
 
         <div className="text-xs mt-3 text-gray-500">© 2025 Shubh Avasar. All rights reserved.</div>
       </div>
+               <a
+        href="https://wa.me/15551234567"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 z-50"
+      >
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+          alt="WhatsApp Chat"
+          className="w-12 h-12 rounded-full shadow-lg hover:scale-110 transition-transform"
+        />
+      </a>
     </footer>
   );
 }

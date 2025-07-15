@@ -11,6 +11,7 @@
   "dependencies": {
     "@headlessui/react": "^2.2.4",
     "@heroicons/react": "^2.2.0",
+    "@stripe/stripe-js": "^7.4.0",
     "country-region-data": "^3.1.0",
     "firebase": "^11.10.0",
     "next": "15.3.4",
@@ -24,6 +25,7 @@
     "react-medium-image-zoom": "^5.2.14",
     "react-modal": "^3.16.3",
     "react-responsive-carousel": "^3.2.23",
+    "stripe": "^18.3.0",
     "swiper": "^11.2.10"
   },
   "devDependencies": {
