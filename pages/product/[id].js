@@ -291,7 +291,7 @@ export default function ProductDetail() {
           {selectedSize === "Custom Size" && (
             <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-md text-sm text-[#7C3D1D]">
               Custom sizes available up to <strong>42&quot;</strong>. Extra charges will apply at checkout.<br />
-              For personalized sizing, <a href="https://wa.me/18073583637" target="_blank" rel="noreferrer" className="text-[#25D366] font-semibold underline">message us on WhatsApp</a>.
+              For personalized sizing, <a href="https://wa.me/14372646555" target="_blank" rel="noreferrer" className="text-[#25D366] font-semibold underline">message us on WhatsApp</a>.
             </div>
           )}
           {selectedSize === "Free Size" && (

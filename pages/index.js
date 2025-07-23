@@ -111,60 +111,89 @@ export default function Home() {
 
       {/* New Arrivals */}
       {/* New Arrivals */}
-      <section className="py-12 px-6 bg-[#F9FAFB]">
-        <h2 className="text-3xl font-bold text-center mb-8">New Arrivals</h2>
-        <div className="relative flex items-center justify-center max-w-7xl mx-auto">
-          {/* Prev Arrow */}
-          <button
-            onClick={handlePrev}
-            disabled={currentIndex === 0}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 flex items-center justify-center w-12 h-12 rounded-full bg-white border border-gray-300 shadow hover:shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed"
-            aria-label="Previous"
-          >
-            <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
+<section className="py-12 px-6 bg-[#F9FAFB]">
+  <h2 className="text-3xl font-bold text-center mb-8">New Arrivals</h2>
 
-          {/* Product Items */}
-          <div className="flex gap-6 overflow-hidden w-full mx-2">
-            {newArrivals
-              .slice(currentIndex, currentIndex + visibleCount)
-              .map((prod) => (
-                <div
-                  key={prod.id}
-                  className="w-72 bg-white rounded-lg shadow-md p-4 flex-shrink-0 cursor-pointer hover:shadow-lg transition"
-                  onClick={() => router.push(`/product/${prod.id}`)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      router.push(`/product/${prod.id}`);
-                    }
-                  }}
-                >
-                  <div className="w-full h-64 rounded-md overflow-hidden mb-4">
-                    <Image src={prod.images[0]} alt={prod.name} className="w-full h-full object-cover" />
-                  </div>
-                  <h3 className="font-semibold text-lg">{prod.name}</h3>
-                  <p className="text-primary font-bold mt-1">₹{prod.price || "-"}</p>
-                </div>
-              ))}
+  <div className="relative max-w-7xl mx-auto">
+    {/* Scrollable Container */}
+    <div
+      id="scroll-container"
+      className="flex gap-6 overflow-x-auto scroll-smooth scrollbar-hide px-2"
+    >
+      {newArrivals.map((prod) => (
+        <div
+          key={prod.id}
+          className="min-w-[16rem] max-w-[18rem] flex-shrink-0 bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition"
+          onClick={() => router.push(`/product/${prod.id}`)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              router.push(`/product/${prod.id}`);
+            }
+          }}
+        >
+          <div className="w-full h-64 rounded-md overflow-hidden mb-4">
+            <Image
+              src={prod.images[0]}
+              alt={prod.name}
+              width={300}
+              height={300}
+              className="w-full h-full object-cover"
+            />
           </div>
-
-          {/* Next Arrow */}
-          <button
-            onClick={handleNext}
-            disabled={currentIndex >= newArrivals.length - visibleCount}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 flex items-center justify-center w-12 h-12 rounded-full bg-white border border-gray-300 shadow hover:shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed"
-            aria-label="Next"
-          >
-            <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+          <h3 className="font-semibold text-lg">{prod.name}</h3>
+          <p className="text-primary font-bold mt-1">₹{prod.price || "-"}</p>
         </div>
-      </section>
+      ))}
+    </div>
+
+    {/* Left Arrow */}
+    <button
+      onClick={() => {
+        document.getElementById("scroll-container").scrollBy({
+          left: -300,
+          behavior: "smooth",
+        });
+      }}
+      className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow border border-gray-300 hover:shadow-md"
+      aria-label="Scroll Left"
+    >
+      <svg
+        className="w-5 h-5 text-black mx-auto"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+
+    {/* Right Arrow */}
+    <button
+      onClick={() => {
+        document.getElementById("scroll-container").scrollBy({
+          left: 300,
+          behavior: "smooth",
+        });
+      }}
+      className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow border border-gray-300 hover:shadow-md"
+      aria-label="Scroll Right"
+    >
+      <svg
+        className="w-5 h-5 text-black mx-auto"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+  </div>
+</section>
+
 
       {/* Brand Story Video Section */}
       <section className="py-12 px-6 bg-black text-white">
