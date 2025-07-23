@@ -167,7 +167,7 @@ export default function Home() {
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-6">Our Story</h2>
           <p className="mb-8 text-lg max-w-2xl mx-auto">
-            Discover the passion, craftsmanship, and creativity that drive every design. Here&aposs a glimpse behind the scenes.
+            Discover the passion, craftsmanship, and creativity that drive every design. Here&apos;s a glimpse behind the scenes.
           </p>
 
           <div className="rounded-lg overflow-hidden shadow-lg">

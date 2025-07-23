@@ -148,7 +148,7 @@ export default function LoginForm({ switchTo, onClose }) {
       </button>
 
       <p className="text-sm text-center mt-6 text-[#1B263B]">
-        Don&apost have an account?{" "}
+        Don&apos;t have an account?{" "}
         <button
           onClick={() => switchTo("signup")}
           className="text-[#F76C6C] underline font-medium"
