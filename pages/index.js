@@ -78,7 +78,7 @@ export default function Home() {
         <h2 className="text-3xl font-bold text-center mb-8">Shop by Category</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto">
           {categories.map((cat) => {
-            console.log('CATEGORY:', cat.images);
+            // console.log('CATEGORY:', cat.images);
             return(
             <div
               key={cat.category}
@@ -92,11 +92,12 @@ export default function Home() {
                 }
               }}
             >
-              <div className="w-full h-64 overflow-hidden">
+              <div className="relative w-full h-64 overflow-hidden">
                 <Image
                   src={cat.images[0]}
                   alt={cat.category}
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
                 />
               </div>
 
@@ -137,8 +138,7 @@ export default function Home() {
             <Image
               src={prod.images[0]}
               alt={prod.name}
-              width={300}
-              height={300}
+              fill
               className="w-full h-full object-cover"
             />
           </div>

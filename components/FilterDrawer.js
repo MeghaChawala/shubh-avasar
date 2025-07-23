@@ -13,7 +13,7 @@ export default function FilterDrawer({ filters, selectedFilters, onFilterChange 
     <>
       {/* Toggle Button */}
       <button
-        className="md:hidden fixed bottom-4 right-4 bg-[#F76C6C] text-white px-4 py-2 rounded-full shadow-lg z-50"
+        className="md:hidden fixed bottom-4 left-4 bg-[#F76C6C] text-white px-4 py-2 rounded-full shadow-lg z-50"
         onClick={() => setIsOpen(true)}
       >
         Filters
