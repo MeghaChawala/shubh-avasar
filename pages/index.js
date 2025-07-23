@@ -94,7 +94,7 @@ export default function Home() {
             >
               <div className="w-full h-64 overflow-hidden">
                 <Image
-                  src={cat.images}
+                  src={cat.images[0]}
                   alt={cat.category}
                   className="w-full h-full object-cover"
                 />
@@ -144,7 +144,7 @@ export default function Home() {
                   }}
                 >
                   <div className="w-full h-64 rounded-md overflow-hidden mb-4">
-                    <Image src={prod.images} alt={prod.name} className="w-full h-full object-cover" />
+                    <Image src={prod.images[0]} alt={prod.name} className="w-full h-full object-cover" />
                   </div>
                   <h3 className="font-semibold text-lg">{prod.name}</h3>
                   <p className="text-primary font-bold mt-1">₹{prod.price || "-"}</p>
