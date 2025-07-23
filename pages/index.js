@@ -92,13 +92,11 @@ export default function Home() {
                 }
               }}
             >
-              <div className="relative w-full h-64 overflow-hidden">
+              <div className="w-full h-64 overflow-hidden">
                 <Image
                   src={cat.images[0]}
                   alt={cat.category}
-                  fill
-                  className="object-cover"
-                />
+                  className="w-full h-full object-cover" />
               </div>
 
               <div className="p-4 text-center bg-[#F76C6C] text-white font-semibold text-xl">
@@ -138,7 +136,8 @@ export default function Home() {
             <Image
               src={prod.images[0]}
               alt={prod.name}
-              fill
+              width={300}
+              height={300}
               className="w-full h-full object-cover"
             />
           </div>
