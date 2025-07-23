@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import HeroCarousel from "@/components/HeroCarousel";
+import Image from 'next/image';
 
 export default function Home() {
   const router = useRouter();
@@ -64,7 +65,7 @@ export default function Home() {
       {/* Discount Banner */}
       <section className="py-8 px-6 bg-[#FFF5F5]">
         <div className="max-w-7xl mx-auto rounded-lg overflow-hidden shadow-lg">
-          <img
+          <Image
             src="/images/discount-banner.jpg" // Update with your actual image path or URL
             alt="Discount Offer"
             className="w-full h-72 object-cover"
@@ -90,7 +91,7 @@ export default function Home() {
               }}
             >
               <div className="w-full h-64 overflow-hidden">
-                <img
+                <Image
                   src={cat.images}
                   alt={cat.category}
                   className="w-full h-full object-cover"
@@ -140,7 +141,7 @@ export default function Home() {
                   }}
                 >
                   <div className="w-full h-64 rounded-md overflow-hidden mb-4">
-                    <img src={prod.images} alt={prod.name} className="w-full h-full object-cover" />
+                    <Image src={prod.images} alt={prod.name} className="w-full h-full object-cover" />
                   </div>
                   <h3 className="font-semibold text-lg">{prod.name}</h3>
                   <p className="text-primary font-bold mt-1">₹{prod.price || "-"}</p>
