@@ -141,13 +141,13 @@ export default function Home() {
           }}
         >
        <div className="w-full h-64 bg-white flex items-center justify-center rounded-md overflow-hidden mb-4">
-  <Image
-    src={prod.images[0]}
-    alt={prod.name}
-    width={250}
-    height={250}
-    className="object-contain"
-  />
+ <Image
+  src={prod.images[0]}
+  alt={prod.name}
+  width={300}
+  height={300}
+  className="h-64 w-full object-contain !h-64"
+/>
 </div>
 
           <h3 className="font-semibold text-lg">{prod.name}</h3>
