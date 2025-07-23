@@ -25,7 +25,7 @@ export default function LegalPage() {
         <h3 className="text-xl font-semibold mt-6 mb-2">How We Use Your Data</h3>
         <p>
           We use your information to fulfill your orders, respond to inquiries, and occasionally send promotional emails
-          (if you've opted in). Your data is never sold or shared with third parties without your consent.
+          (if you&aposve opted in). Your data is never sold or shared with third parties without your consent.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-2">Cookies</h3>
