@@ -160,7 +160,7 @@ export default function ProductDetail() {
         }`}
       >
         {/* Thumbnail or placeholder */}
-        <img
+        <Image
           src={video ? "/video-placeholder.png" : url}
           alt={`Media ${i}`}
           className="object-cover w-full h-full"
@@ -204,7 +204,7 @@ export default function ProductDetail() {
                 className="w-full h-full object-contain rounded"
               />
             ) : (
-              <img
+              <Image
                 ref={zoomImageRef}
                 src={currentMedia}
                 alt={product.name}

@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { useWishlist } from "@/context/WishlistContext";
+import Image from "next/image";
 
 export default function ProductCard({ product }) {
   const router = useRouter();
@@ -47,7 +48,7 @@ export default function ProductCard({ product }) {
         onMouseLeave={handleMouseLeave}
         style={{ height: 400 }}
       >
-        <img
+        <Image
           src={images[currentImg]}
           alt={product.name}
           className="w-full h-full object-cover transition-transform duration-500"

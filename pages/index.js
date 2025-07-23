@@ -77,7 +77,9 @@ export default function Home() {
       <section className="py-12 px-6 bg-white">
         <h2 className="text-3xl font-bold text-center mb-8">Shop by Category</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto">
-          {categories.map((cat) => (
+          {categories.map((cat) => {
+            console.log('CATEGORY:', cat);
+            return(
             <div
               key={cat.category}
               className="cursor-pointer rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
@@ -102,7 +104,8 @@ export default function Home() {
                 {cat.category}
               </div>
             </div>
-          ))}
+            );
+})}
         </div>
       </section>
 
