@@ -103,7 +103,7 @@ export default function Home() {
     src={cat.images[0]}
     alt={cat.category}
     fill
-    className="object-contain"
+    // className="object-contain"
   />
 </div>
 
@@ -144,9 +144,8 @@ export default function Home() {
             <Image
               src={prod.images[0]}
               alt={prod.name}
-              width={300}
-              height={300}
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
             />
           </div>
           <h3 className="font-semibold text-lg">{prod.name}</h3>
