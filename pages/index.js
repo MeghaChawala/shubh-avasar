@@ -140,7 +140,7 @@ export default function Home() {
             }
           }}
         >
-         <div className="w-full h-64 bg-white rounded-md overflow-hidden mb-4 flex items-center justify-center">
+       <div className="w-full h-64 bg-white flex items-center justify-center rounded-md overflow-hidden mb-4">
   <Image
     src={prod.images[0]}
     alt={prod.name}
@@ -149,6 +149,7 @@ export default function Home() {
     className="object-contain"
   />
 </div>
+
           <h3 className="font-semibold text-lg">{prod.name}</h3>
           <p className="text-primary font-bold mt-1">₹{prod.price || "-"}</p>
         </div>
