@@ -79,128 +79,128 @@ export default function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto">
           {categories.map((cat) => {
             // console.log('CATEGORY:', cat.images);
-            return(
-            <div
-              key={cat.category}
-              className="cursor-pointer rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
-              onClick={() => router.push(`/shop?category=${encodeURIComponent(cat.category)}`)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  router.push(`/shop?category=${encodeURIComponent(cat.category)}`);
-                }
-              }}
-            >
-              {/* <div className="w-full h-64 overflow-hidden">
+            return (
+              <div
+                key={cat.category}
+                className="cursor-pointer rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+                onClick={() => router.push(`/shop?category=${encodeURIComponent(cat.category)}`)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    router.push(`/shop?category=${encodeURIComponent(cat.category)}`);
+                  }
+                }}
+              >
+                {/* <div className="w-full h-64 overflow-hidden">
                 <Image
                   src={cat.images[0]}
                   alt={cat.category}
                   className="w-full h-full object-cover" />
               </div> */}
-              <div className="w-full h-64 relative overflow-hidden bg-white">
-  <Image
-    src={cat.images[0]}
-    alt={cat.category}
-    fill
-    // className="object-contain"
-  />
-</div>
+                <div className="w-full h-64 relative overflow-hidden bg-white">
+                  <Image
+                    src={cat.images[0]}
+                    alt={cat.category}
+                    fill
+                  // className="object-contain"
+                  />
+                </div>
 
-              <div className="p-4 text-center bg-[#F76C6C] text-white font-semibold text-xl">
-                {cat.category}
+                <div className="p-4 text-center bg-[#F76C6C] text-white font-semibold text-xl">
+                  {cat.category}
+                </div>
               </div>
-            </div>
             );
-})}
+          })}
         </div>
       </section>
 
       {/* New Arrivals */}
       {/* New Arrivals */}
-<section className="py-12 px-6 bg-[#F9FAFB]">
-  <h2 className="text-3xl font-bold text-center mb-8">New Arrivals</h2>
+      <section className="py-12 px-6 bg-[#F9FAFB]">
+        <h2 className="text-3xl font-bold text-center mb-8">New Arrivals</h2>
 
-  <div className="relative max-w-7xl mx-auto">
-    {/* Scrollable Container */}
-    <div
-      id="scroll-container"
-      className="flex gap-6 overflow-x-auto scroll-smooth scrollbar-hide px-2"
-    >
-      {newArrivals.map((prod) => (
-        <div
-          key={prod.id}
-          className="min-w-[16rem] max-w-[18rem] flex-shrink-0 bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition"
-          onClick={() => router.push(`/product/${prod.id}`)}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              router.push(`/product/${prod.id}`);
-            }
-          }}
-        >
-       <div className="w-full h-64 bg-white flex items-center justify-center rounded-md overflow-hidden mb-4">
- <Image
-  src={prod.images[0]}
-  alt={prod.name}
-  width={300}
-  height={300}
-  className="h-64 w-full object-contain !h-64"
-/>
-</div>
+        <div className="relative max-w-7xl mx-auto">
+          {/* Scrollable Container */}
+          <div
+            id="scroll-container"
+            className="flex gap-6 overflow-x-auto scroll-smooth scrollbar-hide px-2"
+          >
+            {newArrivals.map((prod) => (
+              <div
+                key={prod.id}
+                className="min-w-[16rem] max-w-[18rem] flex-shrink-0 bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition"
+                onClick={() => router.push(`/product/${prod.id}`)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    router.push(`/product/${prod.id}`);
+                  }
+                }}
+              >
+                <div className="w-full h-64 bg-white flex items-center justify-center rounded-md overflow-hidden mb-4">
+                  <Image
+                    src={prod.images[0]}
+                    alt={prod.name}
+                    width={300}
+                    height={300}
+                    className="h-64 w-full !h-64"
+                  />
+                </div>
 
-          <h3 className="font-semibold text-lg">{prod.name}</h3>
-          <p className="text-primary font-bold mt-1">₹{prod.price || "-"}</p>
+                <h3 className="font-semibold text-lg">{prod.name}</h3>
+                <p className="text-primary font-bold mt-1">₹{prod.price || "-"}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Left Arrow */}
+          <button
+            onClick={() => {
+              document.getElementById("scroll-container").scrollBy({
+                left: -300,
+                behavior: "smooth",
+              });
+            }}
+            className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow border border-gray-300 hover:shadow-md"
+            aria-label="Scroll Left"
+          >
+            <svg
+              className="w-5 h-5 text-black mx-auto"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          {/* Right Arrow */}
+          <button
+            onClick={() => {
+              document.getElementById("scroll-container").scrollBy({
+                left: 300,
+                behavior: "smooth",
+              });
+            }}
+            className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow border border-gray-300 hover:shadow-md"
+            aria-label="Scroll Right"
+          >
+            <svg
+              className="w-5 h-5 text-black mx-auto"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
         </div>
-      ))}
-    </div>
-
-    {/* Left Arrow */}
-    <button
-      onClick={() => {
-        document.getElementById("scroll-container").scrollBy({
-          left: -300,
-          behavior: "smooth",
-        });
-      }}
-      className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow border border-gray-300 hover:shadow-md"
-      aria-label="Scroll Left"
-    >
-      <svg
-        className="w-5 h-5 text-black mx-auto"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-      >
-        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-      </svg>
-    </button>
-
-    {/* Right Arrow */}
-    <button
-      onClick={() => {
-        document.getElementById("scroll-container").scrollBy({
-          left: 300,
-          behavior: "smooth",
-        });
-      }}
-      className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow border border-gray-300 hover:shadow-md"
-      aria-label="Scroll Right"
-    >
-      <svg
-        className="w-5 h-5 text-black mx-auto"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-      >
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-      </svg>
-    </button>
-  </div>
-</section>
+      </section>
 
 
       {/* Brand Story Video Section */}

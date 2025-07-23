@@ -108,7 +108,7 @@ export default function Navbar() {
             onMouseEnter={() => setShopOpen(true)}
             onMouseLeave={() => setShopOpen(false)}
           >
-            <span className="cursor-pointer select-none text-xl px-4 py-2 rounded-md hover:blue hover:text-white transition">
+            <span className="cursor-pointer select-none text-xl px-4 py-2 rounded-md hover:bg-[#F76C6C] transition">
               Shop
             </span>
             <div
@@ -118,7 +118,7 @@ export default function Navbar() {
                 }`}
             >
               <div>
-                <h3 className="font-bold text-[#1B263B] mb-3 border-b border-[#a9747a] pb-1">
+                <h3 className="font-bold text-[#1B263B] mb-3 border-b border-[#F76C6C] pb-1">
                   Men
                 </h3>
                 <ul className="space-y-2">
@@ -280,7 +280,7 @@ export default function Navbar() {
           ) : (
             <button
               onClick={() => setLoginOpen(true)}
-              className="flex items-center gap-2 text-xl px-4 py-2 hover:bg-[#F76C6C] transition"
+              className="flex items-center gap-2 text-xl px-4 py-2 rounded hover:bg-[#F76C6C] transition"
             >
               <FaUser /> Login
             </button>
@@ -467,7 +467,7 @@ export default function Navbar() {
               setLoginOpen(true);
               setMobileMenuOpen(false);
             }}
-            className="flex items-center gap-2 text-lg hover:text-[#F76C6C]"
+            className="flex items-center gap-2 text-lg rounded hover:text-[#F76C6C]"
           >
             <FaUser /> Login
           </button>
