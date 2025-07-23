@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import Fuse from "fuse.js"; 
 import FiltersSidebar from "@/components/FiltersSidebar";
 import FilterDrawer from "@/components/FilterDrawer";
 import ProductCard from "@/components/ProductCard";
@@ -34,7 +35,7 @@ export default function ShopPage() {
   });
 
   const [page, setPage] = useState(1);
-
+const searchTerm = (router.query.search || "").toLowerCase().trim();
   // Load category from URL
   useEffect(() => {
     const categoryFromQuery = router.query.category;
@@ -93,8 +94,16 @@ export default function ShopPage() {
     fetchProducts();
   }, []);
 
+  const fuse = new Fuse(productsData, {
+    keys: ["name", "description", "category", "keywords"],
+    threshold: 0.3, // Tweak sensitivity
+  });
+
+  const searchResults = searchTerm ? fuse.search(searchTerm).map(r => r.item) : productsData;
+
+
   // Filter logic
-  const filteredProducts = productsData.filter((product) => {
+  const filteredProducts = searchResults.filter((product) => {
     const { price, color, size, category, tailoring } = selectedFilters;
 
     if (
@@ -122,6 +131,14 @@ export default function ShopPage() {
       );
       if (!matched) return false;
     }
+
+    // if (searchTerm) {
+    //   const matchesSearch =
+    //     product.name?.toLowerCase().includes(searchTerm) ||
+    //     product.description?.toLowerCase().includes(searchTerm) ||
+    //     product.category?.toLowerCase().includes(searchTerm);
+    //   if (!matchesSearch) return false;
+    // }
 
     return true;
   });

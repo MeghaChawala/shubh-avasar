@@ -26,7 +26,7 @@ export default function Footer() {
             {/* Facebook */}
             <div className="relative group">
               <a
-                href="https://facebook.com"
+                href="https://www.facebook.com/share/1YEabkHV6w/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-[#1877F2] text-3xl hover:scale-110 transition-transform"
@@ -41,7 +41,7 @@ export default function Footer() {
             {/* Instagram */}
             <div className="relative group">
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/shubh_avsar_boutique_?igsh=bmhvbmJmZWJzd2Rm"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-[#E1306C] text-3xl hover:scale-110 transition-transform"
@@ -58,7 +58,7 @@ export default function Footer() {
         <div className="text-xs mt-3 text-gray-500">© 2025 Shubh Avasar. All rights reserved.</div>
       </div>
                <a
-        href="https://wa.me/15551234567"
+        href="https://wa.me/14372646555"
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 z-50"

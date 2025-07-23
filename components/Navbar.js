@@ -26,15 +26,19 @@ export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [orders, setOrders] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { wishlist } = useWishlist();
   const { cartItems } = useCart(); // ✅ Access cart items
   const router = useRouter();
   const isCheckoutPage = router.pathname === "/checkout";
   useEffect(() => {
+    console.log("✅ useEffect for auth state change is running");
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
+        console.log(currentUser)
         setUser(currentUser);
+        console.log(currentUser)
         await fetchOrders(currentUser.uid);
       } else {
         setUser(null);
@@ -44,12 +48,14 @@ export default function Navbar() {
     return () => unsubscribe();
   }, []);
 
-  const fetchOrders = async (uid) => {
+  const fetchOrders = async (userUid) => {
     try {
-      const q = query(collection(db, "orders"), where("userId", "==", uid));
+      console.log("uid", userUid);
+      const q = query(collection(db, "orders"), where("userUid", "==", userUid));
       const snapshot = await getDocs(q);
       const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setOrders(data);
+      console.log("data", data);
     } catch (err) {
       console.error("Failed to fetch orders", err);
     }
@@ -68,6 +74,14 @@ export default function Navbar() {
   const handleMobileLinkClick = () => {
     setMobileMenuOpen(false);
   };
+
+  const handleSearch = () => {
+  if (searchTerm.trim() !== "") {
+    router.push(`/shop?search=${encodeURIComponent(searchTerm.trim())}`);
+    setSearchTerm(""); // optional: clear input
+    setMobileMenuOpen(false); // close menu if on mobile
+  }
+};
 
   return (
     <>
@@ -99,8 +113,8 @@ export default function Navbar() {
             </span>
             <div
               className={`absolute top-full left-0 mt-2 bg-white rounded-lg shadow-2xl text-black p-6 w-96 grid grid-cols-2 gap-6 transition-transform duration-300 origin-top ${shopOpen
-                  ? "scale-100 opacity-100"
-                  : "scale-95 opacity-0 pointer-events-none"
+                ? "scale-100 opacity-100"
+                : "scale-95 opacity-0 pointer-events-none"
                 }`}
             >
               <div>
@@ -183,13 +197,73 @@ export default function Navbar() {
                   {orders.length === 0 ? (
                     <p className="text-sm text-gray-500">No orders found.</p>
                   ) : (
-                    <ul className="text-sm max-h-40 overflow-y-auto">
-                      {orders.map((order) => (
-                        <li key={order.id} className="border-b py-2">
-                          #{order.id.slice(0, 6)} - {order.status || "Pending"}
-                        </li>
-                      ))}
-                    </ul>
+<ul className="space-y-4 max-h-80 overflow-y-auto text-sm text-[#1B263B]">
+  {orders.map((order) => (
+    <li
+      key={order.id}
+      className="border border-gray-200 p-4 rounded-lg bg-white shadow-sm"
+    >
+      {/* Order ID and Status */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <p className="font-semibold text-sm break-all">
+          Order #{order.id.slice(0, 8)}
+        </p>
+        <span
+          className={`text-xs font-semibold mt-1 sm:mt-0 w-fit px-2 py-1 rounded-full ${
+            order.status === "paid"
+              ? "bg-green-100 text-green-700"
+              : "bg-yellow-100 text-yellow-800"
+          }`}
+        >
+          {order.status}
+        </span>
+      </div>
+
+      {/* Order Date */}
+      <p className="text-xs text-gray-500 mt-1">
+        {new Date(order.createdAt.seconds * 1000).toLocaleDateString("en-CA", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        })}
+      </p>
+
+      {/* Customer Info */}
+      <p className="text-xs text-gray-700 truncate">
+        {order.fullName}, {order.city}, {order.province}
+      </p>
+
+      {/* Items */}
+      {order.items && order.items.length > 0 && (
+        <ul className="text-xs text-gray-600 list-disc pl-4 mt-2 space-y-1">
+          {order.items.map((item, idx) => (
+            <li key={idx}>
+              {item.name} × {item.qty}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {/* Total + View Details Link */}
+      <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mt-3 gap-2">
+        <p className="text-sm font-medium">
+          Total: {order.currency.toUpperCase()} ₹{order.amountTotal.toFixed(2)}
+        </p>
+        <Link
+          href={`/orders/${order.id}`}
+          className="text-blue-600 text-xs font-semibold hover:underline"
+        >
+          View details
+        </Link>
+      </div>
+    </li>
+  ))}
+</ul>
+
+
+
+
+
                   )}
                   {!isCheckoutPage && (
                     <button
@@ -216,10 +290,16 @@ export default function Navbar() {
           <div className="flex items-center bg-[#E7EEF9] rounded-full px-4 py-1 text-[#1B263B] w-48 focus-within:ring-2 focus-within:ring-[#F76C6C]">
             <FaSearch />
             <input
-              type="text"
-              placeholder="Search products..."
-              className="ml-2 bg-transparent outline-none w-full text-sm font-medium placeholder-[#1B263B]"
-            />
+  type="text"
+  placeholder="Search products..."
+  value={searchTerm}
+  onChange={(e) => setSearchTerm(e.target.value)}
+  onKeyDown={(e) => {
+    if (e.key === "Enter") handleSearch();
+  }}
+  className="ml-2 bg-transparent outline-none w-full text-sm font-medium placeholder-[#1B263B]"
+/>
+
           </div>
         </div>
 
@@ -315,16 +395,62 @@ export default function Navbar() {
             </p>
             <h4 className="text-[#F76C6C] font-bold mb-2">Order History</h4>
             {orders.length === 0 ? (
-              <p className="text-sm text-gray-300 mb-3">No orders found.</p>
-            ) : (
-              <ul className="text-sm max-h-40 overflow-y-auto mb-3">
-                {orders.map((order) => (
-                  <li key={order.id} className="border-b border-gray-600 py-1">
-                    #{order.id.slice(0, 6)} - {order.status || "Pending"}
-                  </li>
-                ))}
-              </ul>
-            )}
+  <p className="text-sm text-gray-300 mb-3">No orders found.</p>
+) : (
+  <ul className="text-sm max-h-64 overflow-y-auto mb-3 space-y-4 px-2">
+    {orders.map((order) => (
+      <li
+        key={order.id}
+        className="border border-gray-600 rounded-md p-3 bg-white text-black"
+      >
+        <div className="flex flex-col sm:flex-row sm:justify-between">
+          <span className="font-semibold text-sm break-words">
+            Order ID: {order.id}
+          </span>
+          <span
+            className={`text-xs font-bold px-2 py-1 rounded-full mt-1 sm:mt-0 w-fit ${
+              order.status === "paid"
+                ? "bg-green-100 text-green-700"
+                : "bg-yellow-100 text-yellow-800"
+            }`}
+          >
+            {order.status}
+          </span>
+        </div>
+
+        <p className="text-xs text-gray-500 mt-2">
+          {new Date(order.createdAt.seconds * 1000).toLocaleDateString()}
+        </p>
+        <p className="text-xs text-gray-700 break-words mb-2">
+          {order.fullName}, {order.city}, {order.province}
+        </p>
+
+        {order.items?.length > 0 && (
+          <ul className="text-xs text-gray-600 list-disc pl-5 mb-2 space-y-1">
+            {order.items.map((item, idx) => (
+              <li key={idx}>
+                {item.name} × {item.qty}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <div className="flex flex-col sm:flex-row sm:justify-between mt-2">
+          <p className="text-sm font-medium">
+            Total: {order.currency.toUpperCase()} ₹{order.amountTotal.toFixed(2)}
+          </p>
+          <Link
+            href={`/orders/${order.id}`}
+            className="text-blue-600 text-xs font-semibold hover:underline mt-1 sm:mt-0"
+          >
+            View details
+          </Link>
+        </div>
+      </li>
+    ))}
+  </ul>
+)}
+
             {!isCheckoutPage && (
               <button
                 onClick={handleLogout}
@@ -363,3 +489,6 @@ export default function Navbar() {
     </>
   );
 }
+
+
+

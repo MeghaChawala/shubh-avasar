@@ -1,13 +1,17 @@
 import { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
-import { auth } from "@/lib/firebase";
 import Image from "next/image";
 import { toast } from "react-hot-toast";
 import { onAuthStateChanged } from "firebase/auth";
 import { loadStripe } from "@stripe/stripe-js";
+import { auth, db } from "@/lib/firebase";
+import { doc, getDoc } from "firebase/firestore"; 
 
 export default function CheckoutPage() {
   const { cartItems, clearCart } = useCart();
+  const [currency, setCurrency] = useState("CAD");
+  const [exchangeRate, setExchangeRate] = useState(1); // default for CAD
+const [isFirstOrder, setIsFirstOrder] = useState(false);
 
   const [deliveryInfo, setDeliveryInfo] = useState({
     fullName: "",
@@ -21,19 +25,50 @@ export default function CheckoutPage() {
   });
 
   const [errors, setErrors] = useState({});
-  const FIRST_ORDER_DISCOUNT_RATE = 0.1;
+  // const FIRST_ORDER_DISCOUNT_RATE = 0.1;
   const CUSTOM_SIZE_CHARGE = 15;
   const [shippingFee, setShippingFee] = useState(0);
   const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+
+  // Track if user is logged in
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user?.email) {
-        setDeliveryInfo((prev) => ({ ...prev, email: user.email }));
+        setIsLoggedIn(true);
+
+        try {
+          const docRef = doc(db, "users", user.uid);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            setDeliveryInfo((prev) => ({
+              ...prev,
+              email: user.email,
+              fullName: data.name || "", // 👈 Auto-fill name if available
+            }));
+            setIsFirstOrder(!data.hasMadeOrder);
+          } else {
+            setDeliveryInfo((prev) => ({
+              ...prev,
+              email: user.email,
+              
+            }));
+            setIsFirstOrder(true);
+          }
+        } catch (err) {
+          console.error("Failed to fetch user profile:", err);
+        }
+      } else {
+        setIsLoggedIn(false);
+        setDeliveryInfo((prev) => ({ ...prev, email: "", fullName: "" }));
+        setIsFirstOrder(false);
       }
     });
+
     return () => unsubscribe();
   }, []);
-
   // Province/state options based on country
   const provincesByCountry = {
     Canada: [
@@ -53,16 +88,48 @@ export default function CheckoutPage() {
       // Add more states as needed
     ],
   };
+
   const isGTA = (postal) => postal.trim().toUpperCase().startsWith("M");
+
+  useEffect(() => {
+    const fetchExchangeRate = async () => {
+      if (deliveryInfo.country === "USA") {
+        try {
+          const res = await fetch("https://open.er-api.com/v6/latest/CAD");
+          const data = await res.json();
+          const usdRate = data.rates?.USD || 1;
+          setExchangeRate(usdRate);
+          setCurrency("USD");
+        } catch (err) {
+          console.error("Failed to fetch USD exchange rate:", err);
+          setExchangeRate(1);
+          setCurrency("USD");
+        }
+      } else {
+        setExchangeRate(1);
+        setCurrency("CAD");
+      }
+    };
+
+    fetchExchangeRate();
+  }, [deliveryInfo.country]);
+
+  const formatPrice = (amount) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: currency,
+    }).format(amount * exchangeRate);
+  };
 
   const customizationTotal = cartItems.reduce((sum, item) => {
     return sum + (item.selectedSize?.toLowerCase() === "custom size" ? CUSTOM_SIZE_CHARGE * item.qty : 0);
   }, 0);
 
   const baseSubtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
-  const discount = baseSubtotal * FIRST_ORDER_DISCOUNT_RATE;
+  // const discount = isFirstOrder ? baseSubtotal * FIRST_ORDER_DISCOUNT_RATE : 0;
+
   const subtotal = baseSubtotal + customizationTotal + shippingFee;
-  const discountedSubtotal = subtotal - discount;
+  const discountedSubtotal = subtotal;
   const tax = subtotal * 0.13;
   const grandTotal = discountedSubtotal + tax;
 
@@ -110,38 +177,48 @@ export default function CheckoutPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-
-const [isProcessing, setIsProcessing] = useState(false);
-  const handlePayment = async () => {
-    // Validate form before proceeding to Stripe
+  const [isProcessing, setIsProcessing] = useState(false);
+const handlePayment = async () => {
     if (!validateForm()) {
       toast.error("Please fill in all required fields correctly.");
       return;
     }
-  // const requiredFields = ["fullName", "email", "phone", "address", "city", "province", "country", "postalCode"];
-  // const missing = requiredFields.filter((key) => !deliveryInfo[key]?.trim());
-  // if (missing.length) {
-  //   toast.error("Please fill all required delivery fields.");
-  //   return;
-  // }
-setIsProcessing(true);
-  const res = await fetch("/api/create-checkout-session", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ cartItems, deliveryInfo }),
-  });
 
-  const data = await res.json();
-  if (data.error) {
-    toast.error("Payment failed. Try again.");
-    setIsProcessing(false);
-    return;
-  }
+    setIsProcessing(true);
 
-  const stripe = await stripePromise;
-  await stripe.redirectToCheckout({ sessionId: data.id });
-};
+    try {
+      let token = null;
 
+      if (isLoggedIn && auth.currentUser) {
+        token = await auth.currentUser.getIdToken(); // 🔒 Get Firebase ID token
+      }
+
+      const res = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }), // 🔒 Send token securely
+        },
+        body: JSON.stringify({ cartItems, deliveryInfo }),
+      });
+
+      const data = await res.json();
+
+      if (data.error) {
+        toast.error("Payment failed. Try again.");
+        setIsProcessing(false);
+        return;
+      }
+
+      const stripe = await stripePromise;
+      await stripe.redirectToCheckout({ sessionId: data.id });
+    } catch (err) {
+      console.error("Checkout error:", err);
+      toast.error("An error occurred. Please try again.");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
   return (
     <div className="min-h-screen bg-[#F9FAFB] px-4 py-10">
       <h1 className="text-3xl font-bold text-center text-[#1B263B] mb-8">Checkout</h1>
@@ -169,11 +246,11 @@ setIsProcessing(true);
                     {item.selectedColor}, {item.selectedSize}
                   </p>
                   <p className="text-sm mt-1">
-                    Qty: {item.qty} × ${item.price.toFixed(2)}
+                    Qty: {item.qty} × {formatPrice(item.price)}
                   </p>
                 </div>
                 <div className="font-semibold text-right text-[#1B263B]">
-                  ${(item.price * item.qty).toFixed(2)}
+                  {formatPrice(item.price * item.qty)}
                 </div>
               </div>
             ))}
@@ -183,29 +260,29 @@ setIsProcessing(true);
           <div className="mt-6 space-y-2 text-[#1B263B]">
             <div className="flex justify-between">
               <span>Subtotal:</span>
-              <span>${baseSubtotal.toFixed(2)}</span>
+              <span>{formatPrice(baseSubtotal)}</span>
             </div>
             <div className="flex justify-between">
               <span>Customization Charges:</span>
-              <span>${customizationTotal.toFixed(2)}</span>
+              <span>{formatPrice(customizationTotal)}</span>
             </div>
             <div className="flex justify-between">
               <span>Shipping Fee:</span>
-              <span>{shippingFee === 0 ? "Free" : `$${shippingFee.toFixed(2)}`}</span>
+              <span>{shippingFee === 0 ? "Free" : formatPrice(shippingFee)}</span>
             </div>
-            <div className="flex justify-between">
+            {/* <div className="flex justify-between">
               <span>First Order Discount:</span>
-              <span className="text-green-600">– ${discount.toFixed(2)}</span>
-            </div>
+              <span className="text-green-600">– {formatPrice(discount)}</span>
+            </div> */}
             <div className="flex justify-between">
               <span>Tax (13% HST):</span>
-              <span>${tax.toFixed(2)}</span>
+              <span>{formatPrice(tax)}</span>
             </div>
 
             <hr className="border-t my-2" />
             <div className="flex justify-between font-bold text-lg">
               <span>Grand Total:</span>
-              <span>${grandTotal.toFixed(2)}</span>
+              <span>{formatPrice(grandTotal)}</span>
             </div>
           </div>
         </div>
@@ -228,15 +305,32 @@ setIsProcessing(true);
             </div>
 
             <div>
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={deliveryInfo.email}
-                onChange={handleChange}
-                className="w-full border px-4 py-2 rounded"
-              />
-              {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+              {isLoggedIn ? (
+                <>
+                  <label className="block mb-1 font-medium">Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={deliveryInfo.email}
+                    readOnly
+                    disabled
+                    className="w-full border px-4 py-2 rounded bg-gray-200 cursor-not-allowed"
+                  />
+                  <p className="text-sm text-gray-600 mt-1">Email linked to your account.</p>
+                </>
+              ) : (
+                <>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    value={deliveryInfo.email}
+                    onChange={handleChange}
+                    className="w-full border px-4 py-2 rounded"
+                  />
+                  {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+                </>
+              )}
             </div>
 
             <div>
@@ -331,14 +425,13 @@ setIsProcessing(true);
             <button
               onClick={handlePayment}
               disabled={isProcessing}
-             className={`w-full py-3 rounded transition ${
-    isProcessing
-      ? "bg-gray-400 cursor-not-allowed"
-      : "bg-[#F76C6C] text-white hover:bg-red-600"
-  }`}
->
-  {isProcessing ? "Processing..." : ""}
-              Place Order
+              className={`w-full py-3 rounded transition ${
+                isProcessing
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-[#F76C6C] text-white hover:bg-red-600"
+              }`}
+            >
+              {isProcessing ? "Processing..." : "Place Order"}
             </button>
           </div>
         </div>

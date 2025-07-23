@@ -82,8 +82,8 @@ export default function ContactPage() {
       <div className="mb-6 md:mb-0">
         <h2 className="text-2xl font-bold mb-4 text-[#B91C1C]">Our Contact Details</h2>
         <p className="mb-2">📍 <strong>Location:</strong> Toronto, Canada</p>
-        <p className="mb-2">📞 <strong>Phone:</strong> +1 234-567-890</p>
-        <p className="mb-2">📧 <strong>Email:</strong> contact@shubhavasar.com</p>
+        <p className="mb-2">📞 <strong>Phone:</strong> +1 (437) 264-6555</p>
+        <p className="mb-2">📧 <strong>Email:</strong> Shubhavsarboutique@gmail.com</p>
         <div className="mt-4">
           <h3 className="text-lg font-semibold mb-1">🕒 Working Hours</h3>
           <p>Monday – Friday: 10:00 AM – 7:00 PM</p>

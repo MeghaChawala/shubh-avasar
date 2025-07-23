@@ -227,7 +227,24 @@ export default function ProductDetail() {
         {/* RIGHT: Info */}
         <div className="flex flex-col gap-5">
           <h1 className="text-3xl font-bold text-[#1B263B]">{product.name}</h1>
-          <p className="text-2xl text-[#F76C6C] font-semibold">${product.price.toFixed(2)}</p>
+          {/* <p className="text-2xl text-[#F76C6C] font-semibold">${product.price.toFixed(2)}</p> */}
+          <div className="flex items-center gap-3 mt-1">
+  {product.originalPrice && product.originalPrice > product.price ? (
+    <>
+      <span className="text-lg text-gray-500 line-through">
+        ${product.originalPrice.toFixed(2)}
+      </span>
+      <span className="text-2xl text-[#F76C6C] font-semibold">
+        ${product.price.toFixed(2)}
+      </span>
+    </>
+  ) : (
+    <span className="text-2xl text-[#F76C6C] font-semibold">
+      ${product.price.toFixed(2)}
+    </span>
+  )}
+</div>
+
 
           {/* Color selection */}
           {Object.keys(colorVariants).length > 0 && (

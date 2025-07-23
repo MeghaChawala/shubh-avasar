@@ -37,7 +37,7 @@ export default function ProductCard({ product }) {
 
   return (
     <div
-      className="cursor-pointer rounded overflow-hidden shadow hover:shadow-lg transition max-w-xs mx-auto bg-white"
+      className="#1B263B-pointer rounded overflow-hidden shadow hover:shadow-lg transition max-w-xs mx-auto bg-white"
       style={{ width: 280 }}
       onClick={handleCardClick}
     >
@@ -70,7 +70,18 @@ export default function ProductCard({ product }) {
 
       <div className="px-3 py-2">
         <h3 className="text-base font-medium text-[#1B263B] truncate">{product.name}</h3>
-        <p className="text-gray-700 font-semibold mt-1">${product.price.toFixed(2)}</p>
+        {/* <p className="text-gray-700 font-semibold mt-1">${product.price.toFixed(2)}</p> */}
+        <div className="mt-1">
+  {product.originalPrice && product.originalPrice > product.price ? (
+    <div className="space-x-2">
+      <span className="line-through text-gray-500">${product.originalPrice.toFixed(2)}</span>
+      <span className="text-red-600 font-semibold">${product.price.toFixed(2)}</span>
+    </div>
+  ) : (
+    <span className="text-gray-700 font-semibold">${product.price.toFixed(2)}</span>
+  )}
+</div>
+
       </div>
     </div>
   );
