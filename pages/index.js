@@ -92,12 +92,20 @@ export default function Home() {
                 }
               }}
             >
-              <div className="w-full h-64 overflow-hidden">
+              {/* <div className="w-full h-64 overflow-hidden">
                 <Image
                   src={cat.images[0]}
                   alt={cat.category}
                   className="w-full h-full object-cover" />
-              </div>
+              </div> */}
+              <div className="w-full h-64 relative overflow-hidden bg-white">
+  <Image
+    src={cat.images[0]}
+    alt={cat.category}
+    fill
+    className="object-contain"
+  />
+</div>
 
               <div className="p-4 text-center bg-[#F76C6C] text-white font-semibold text-xl">
                 {cat.category}
