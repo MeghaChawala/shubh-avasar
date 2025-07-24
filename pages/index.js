@@ -146,7 +146,7 @@ export default function Home() {
                     alt={prod.name}
                     width={300}
                     height={300}
-                    className="h-64 w-full !h-64"
+                    className="w-full !h-64"
                   />
                 </div>
 

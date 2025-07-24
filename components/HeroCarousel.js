@@ -14,13 +14,13 @@ export default function HeroCarousel() {
       className="z-10"
     >
       <div>
-        <Image src="images/HB-banner_Desktop-min_19.webp" alt="Slide 1" />
+        <Image src="images/Banner1.png" alt="Slide 1" />
       </div>
       <div>
-        <Image src="images/c2.jpeg" alt="Slide 2" />
+        <Image src="images/Banner2.png" alt="Slide 2" />
       </div>
       <div>
-        <Image src="images/c5.png" alt="Slide 3" />
+        <Image src="images/Banner3.png" alt="Slide 3" />
       </div>
     </Carousel>
   );
