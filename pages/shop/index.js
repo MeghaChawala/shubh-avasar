@@ -18,7 +18,7 @@ export default function ShopPage() {
     color: [],
     size: [],
     category: [],
-    tailoring: [],
+    // tailoring: [],
   });
 
   const [productsData, setProductsData] = useState([]);
@@ -31,7 +31,7 @@ export default function ShopPage() {
     color: [],
     size: [],
     category: [],
-    tailoring: [],
+    // tailoring: [],
   });
 
   const [page, setPage] = useState(1);
@@ -66,7 +66,7 @@ const searchTerm = (router.query.search || "").toLowerCase().trim();
         const uniqueColors = new Set();
         const uniqueSizes = new Set();
         const uniqueCategories = new Set();
-        const uniqueTailoring = new Set();
+        // const uniqueTailoring = new Set();
 
         items.forEach((product) => {
           Object.entries(product.colorVariants || {}).forEach(([clr, variant]) => {
@@ -75,7 +75,7 @@ const searchTerm = (router.query.search || "").toLowerCase().trim();
           });
 
           if (product.category) uniqueCategories.add(product.category);
-          if (product.tailoring) uniqueTailoring.add(product.tailoring);
+          // if (product.tailoring) uniqueTailoring.add(product.tailoring);
         });
 
         setFilters({
@@ -83,7 +83,7 @@ const searchTerm = (router.query.search || "").toLowerCase().trim();
           color: Array.from(uniqueColors).sort(),
           size: Array.from(uniqueSizes).sort(),
           category: Array.from(uniqueCategories).sort(),
-          tailoring: Array.from(uniqueTailoring).sort(),
+          // tailoring: Array.from(uniqueTailoring).sort(),
         });
       } catch (err) {
         setError("Failed to load products.");
@@ -104,8 +104,8 @@ const searchTerm = (router.query.search || "").toLowerCase().trim();
 
   // Filter logic
   const filteredProducts = searchResults.filter((product) => {
-    const { price, color, size, category, tailoring } = selectedFilters;
-
+    // const { price, color, size, category, tailoring } = selectedFilters;
+    const { price, color, size, category } = selectedFilters;
     if (
       price.length > 0 &&
       !price.some((range) => {
@@ -119,7 +119,7 @@ const searchTerm = (router.query.search || "").toLowerCase().trim();
 
     if (category.length > 0 && !category.includes(product.category)) return false;
 
-    if (tailoring.length > 0 && !tailoring.includes(product.tailoring)) return false;
+    // if (tailoring.length > 0 && !tailoring.includes(product.tailoring)) return false;
 
     if (color.length > 0 || size.length > 0) {
       const matched = Object.entries(product.colorVariants || {}).some(
@@ -181,8 +181,8 @@ const searchTerm = (router.query.search || "").toLowerCase().trim();
   const isFiltered =
     selectedFilters.price.length > 0 ||
     selectedFilters.color.length > 0 ||
-    selectedFilters.size.length > 0 ||
-    selectedFilters.tailoring.length > 0;
+    selectedFilters.size.length > 0 ;
+    // selectedFilters.tailoring.length > 0;
 
   return (
     <div
