@@ -64,13 +64,15 @@ export default function Home() {
 
       {/* Discount Banner */}
       <section className="py-8 px-6 bg-[#FFF5F5]">
-        <div className="max-w-7xl mx-auto rounded-lg overflow-hidden shadow-lg">
-          <Image
-            src="/images/discount-banner.png" // Update with your actual image path or URL
-            alt="Discount Offer"
-            className="w-full h-72 object-cover"
-          />
-        </div>
+        <div className="relative max-w-7xl mx-auto rounded-lg overflow-hidden shadow-lg h-[400px]">
+  <Image
+    src="/images/discount-banner.png"
+    alt="Discount Offer"
+    fill
+    className="object-cover"
+  />
+</div>
+
       </section>
 
       {/* Shop By Category */}
@@ -151,7 +153,23 @@ export default function Home() {
                 </div>
 
                 <h3 className="font-semibold text-lg">{prod.name}</h3>
-                <p className="text-primary font-bold mt-1">₹{prod.price || "-"}</p>
+                {/* <p className="text-primary font-bold mt-1">₹{prod.price || "-"}</p> */}
+                <div className="flex items-center gap-3 mt-1">
+  {prod.originalPrice && prod.originalPrice > prod.price ? (
+    <>
+      <span className="text-lg text-gray-500 line-through">
+        ${prod.originalPrice.toFixed(2)}
+      </span>
+      <span className="text-xl text-[#F76C6C] font-bold mt-1">
+        ${prod.price.toFixed(2)}
+      </span>
+    </>
+  ) : (
+    <span className="text-xl text-[#F76C6C] font-bold mt-1">
+      ${prod.price.toFixed(2)}
+    </span>
+  )}
+</div>
               </div>
             ))}
           </div>
@@ -213,11 +231,11 @@ export default function Home() {
 
           <div className="rounded-lg overflow-hidden shadow-lg">
             <video
-              src="/images/brand-story.mp4"
+              src="/images/brand-story.MOV"
               controls
               muted
               poster="/images/brand-poster.jpg"
-              className="w-full h-auto rounded-lg shadow"
+              className="w-full max-h-[500px] mx-auto rounded-lg shadow"
             >
               Your browser does not support the video tag.
             </video>
@@ -226,6 +244,42 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+
+{/* Home Visit Section */}
+<div className="h-6 bg-gradient-to-b from-black to-[#FFF5F5]" />
+<section className="py-16 bg-[#FFF5F5]">
+  <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+    {/* Image or Illustration */}
+    <div className="relative h-80 md:h-full">
+      <Image
+        src="/images/home-visit.jpg" // Replace with your actual image path
+        alt="Home Visit"
+        fill
+        className="rounded-xl object-cover shadow-md"
+      />
+    </div>
+
+    {/* Text Content */}
+    <div className="text-center md:text-left">
+      <h2 className="text-4xl font-bold text-[#1B263B] mb-4 leading-tight">
+        Book a Personalized Home Visit
+      </h2>
+      <p className="text-lg text-gray-700 mb-6 max-w-xl">
+        Skip the travel—our stylist brings the boutique experience to your doorstep.
+        Explore outfits tailored to your taste, try them at home, and enjoy the ultimate comfort.
+      </p>
+
+      <button
+        onClick={() => router.push('/book-home-visit')}
+        className="bg-[#F76C6C] hover:bg-[#d85757] text-white text-lg font-semibold py-3 px-8 rounded-full transition shadow-lg"
+      >
+        Book Now
+      </button>
+    </div>
+  </div>
+</section>
+
 
 
       {/* Why Choose Us Section */}

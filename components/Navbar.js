@@ -124,7 +124,12 @@ export default function Navbar() {
                 <ul className="space-y-2">
                   <li>
                     <Link href="/shop?category=Kurtas" legacyBehavior>
-                      <a className="hover:text-[#1B263B]">Kurtas</a>
+                      <a className="hover:text-[#1B263B] whitespace-nowrap text-sm">Kurtas</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/shop?category=Kediya" legacyBehavior>
+                      <a className="hover:text-[#1B263B] whitespace-nowrap text-sm">Kediya</a>
                     </Link>
                   </li>
                 </ul>
@@ -137,19 +142,24 @@ export default function Navbar() {
                 <ul className="space-y-2">
                   <li>
                     <Link href="/shop?category=Party%20Wear" legacyBehavior>
-                      <a className="hover:text-[#1B263B]">Party Wear</a>
+                      <a className="hover:text-[#1B263B] whitespace-nowrap text-sm">Party Wear</a>
                     </Link>
                   </li>
                   <li>
-                    <Link href="/shop?category=Navratri%20Collection" legacyBehavior>
-                      <a className="hover:text-[#1B263B]">Navratri Collection</a>
+                    <Link href="/shop?category=Navratri%20Chaniya%20Choli" legacyBehavior>
+                      <a className="hover:text-[#1B263B] whitespace-nowrap text-sm">Navratri Chaniya Choli</a>
                     </Link>
                   </li>
                   <li>
-                    <Link href="/shop?category=T-Shirts" legacyBehavior>
-                      <a className="hover:text-[#1B263B]">T-Shirts</a>
+                    <Link href="/shop?category=Sharara%20Suit" legacyBehavior>
+                      <a className="hover:text-[#1B263B] whitespace-nowrap text-sm">Sharara Suit</a>
                     </Link>
                   </li>
+                  <li>
+      <Link href="/shop?category=Designer%20Lehenga" legacyBehavior>
+        <a className="hover:text-[#1B263B] whitespace-nowrap text-sm">Designer Lehenga</a>
+      </Link>
+    </li>
                 </ul>
               </div>
             </div>
@@ -329,6 +339,13 @@ export default function Navbar() {
                   </a>
                 </Link>
               </li>
+              <li>
+    <Link href="/shop?category=Kediya" legacyBehavior>
+      <a onClick={handleMobileLinkClick} className="block hover:text-[#F76C6C]">
+        Kediya
+      </a>
+    </Link>
+  </li>
             </ul>
             <h4 className="text-[#F76C6C] font-bold mt-4">Women</h4>
             <ul className="space-y-2">
@@ -340,19 +357,27 @@ export default function Navbar() {
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=Navratri%20Collection" legacyBehavior>
+                <Link href="/shop?category=Navratri%20Chaniya%20Choli" legacyBehavior>
                   <a onClick={handleMobileLinkClick} className="block hover:text-[#F76C6C]">
-                    Navratri Collection
+                    Navratri Chaniya Choli
                   </a>
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=T-Shirts" legacyBehavior>
+                <Link href="/shop?category=Sharara%20Suit" legacyBehavior>
                   <a onClick={handleMobileLinkClick} className="block hover:text-[#F76C6C]">
-                    T-Shirts
+                    Sharara Suit
+
                   </a>
                 </Link>
               </li>
+              <li>
+    <Link href="/shop?category=Designer%20Lehenga" legacyBehavior>
+      <a onClick={handleMobileLinkClick} className="block hover:text-[#F76C6C]">
+        Designer Lehenga
+      </a>
+    </Link>
+  </li>
             </ul>
           </div>
         </details>

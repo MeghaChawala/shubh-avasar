@@ -13,15 +13,33 @@ export default function HeroCarousel() {
       interval={4000}
       className="z-10"
     >
-      <div>
-        <Image src="images/Banner1.png" alt="Slide 1" />
-      </div>
-      <div>
-        <Image src="images/Banner2.png" alt="Slide 2" />
-      </div>
-      <div>
-        <Image src="images/Banner3.png" alt="Slide 3" />
-      </div>
+<div className="relative w-full h-[800px] sm:h-[600px] md:h-[500px] lg:h-[800px]">
+  <Image
+    src="/images/Banner1.png"
+    alt="Slide 1"
+    fill
+    className="object-cover"
+  />
+</div>
+
+<div className="relative w-full h-[800px] sm:h-[600px] md:h-[500px] lg:h-[800px]">
+  <Image
+    src="/images/Banner2.png"
+    alt="Slide 2"
+    fill
+    className="object-cover"
+  />
+</div>
+
+<div className="relative w-full h-[800px] sm:h-[600px] md:h-[500px] lg:h-[800px]">
+  <Image
+    src="/images/Banner3.png"
+    alt="Slide 3"
+    fill
+    className="object-cover"
+  />
+</div>
+
     </Carousel>
   );
 }

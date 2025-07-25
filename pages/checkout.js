@@ -5,13 +5,13 @@ import { toast } from "react-hot-toast";
 import { onAuthStateChanged } from "firebase/auth";
 import { loadStripe } from "@stripe/stripe-js";
 import { auth, db } from "@/lib/firebase";
-import { doc, getDoc } from "firebase/firestore"; 
+import { doc, getDoc } from "firebase/firestore";
 
 export default function CheckoutPage() {
   const { cartItems, clearCart } = useCart();
   const [currency, setCurrency] = useState("CAD");
   const [exchangeRate, setExchangeRate] = useState(1); // default for CAD
-const [isFirstOrder, setIsFirstOrder] = useState(false);
+  const [isFirstOrder, setIsFirstOrder] = useState(false);
 
   const [deliveryInfo, setDeliveryInfo] = useState({
     fullName: "",
@@ -33,7 +33,7 @@ const [isFirstOrder, setIsFirstOrder] = useState(false);
   // Track if user is logged in
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    useEffect(() => {
+  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user?.email) {
         setIsLoggedIn(true);
@@ -53,7 +53,7 @@ const [isFirstOrder, setIsFirstOrder] = useState(false);
             setDeliveryInfo((prev) => ({
               ...prev,
               email: user.email,
-              
+
             }));
             setIsFirstOrder(true);
           }
@@ -74,22 +74,120 @@ const [isFirstOrder, setIsFirstOrder] = useState(false);
     Canada: [
       { code: "ON", name: "Ontario" },
       { code: "QC", name: "Quebec" },
-      { code: "BC", name: "British Columbia" },
-      { code: "AB", name: "Alberta" },
+      { code: "NS", name: "Nova Scotia" },
+      { code: "NB", name: "New Brunswick" },
       { code: "MB", name: "Manitoba" },
-      // Add more provinces if needed
+      { code: "BC", name: "British Columbia" },
+      { code: "PE", name: "Prince Edward Island" },
+      { code: "SK", name: "Saskatchewan" },
+      { code: "AB", name: "Alberta" },
+      { code: "NL", name: "Newfoundland and Labrador" },
+      { code: "YT", name: "Yukon" },
+      { code: "NT", name: "Northwest Territories" },
+      { code: "NU", name: "Nunavut" },
     ],
     USA: [
+      { code: "AL", name: "Alabama" },
+      { code: "AK", name: "Alaska" },
+      { code: "AZ", name: "Arizona" },
+      { code: "AR", name: "Arkansas" },
       { code: "CA", name: "California" },
-      { code: "NY", name: "New York" },
-      { code: "TX", name: "Texas" },
+      { code: "CO", name: "Colorado" },
+      { code: "CT", name: "Connecticut" },
+      { code: "DE", name: "Delaware" },
+      { code: "DC", name: "Washington, D.C." },
       { code: "FL", name: "Florida" },
+      { code: "GA", name: "Georgia" },
+      { code: "HI", name: "Hawaii" },
+      { code: "ID", name: "Idaho" },
       { code: "IL", name: "Illinois" },
-      // Add more states as needed
+      { code: "IN", name: "Indiana" },
+      { code: "IA", name: "Iowa" },
+      { code: "KS", name: "Kansas" },
+      { code: "KY", name: "Kentucky" },
+      { code: "LA", name: "Louisiana" },
+      { code: "ME", name: "Maine" },
+      { code: "MD", name: "Maryland" },
+      { code: "MA", name: "Massachusetts" },
+      { code: "MI", name: "Michigan" },
+      { code: "MN", name: "Minnesota" },
+      { code: "MS", name: "Mississippi" },
+      { code: "MO", name: "Missouri" },
+      { code: "MT", name: "Montana" },
+      { code: "NE", name: "Nebraska" },
+      { code: "NV", name: "Nevada" },
+      { code: "NH", name: "New Hampshire" },
+      { code: "NJ", name: "New Jersey" },
+      { code: "NM", name: "New Mexico" },
+      { code: "NY", name: "New York" },
+      { code: "NC", name: "North Carolina" },
+      { code: "ND", name: "North Dakota" },
+      { code: "OH", name: "Ohio" },
+      { code: "OK", name: "Oklahoma" },
+      { code: "OR", name: "Oregon" },
+      { code: "PA", name: "Pennsylvania" },
+      { code: "RI", name: "Rhode Island" },
+      { code: "SC", name: "South Carolina" },
+      { code: "SD", name: "South Dakota" },
+      { code: "TN", name: "Tennessee" },
+      { code: "TX", name: "Texas" },
+      { code: "UT", name: "Utah" },
+      { code: "VT", name: "Vermont" },
+      { code: "VA", name: "Virginia" },
+      { code: "WA", name: "Washington" },
+      { code: "WV", name: "West Virginia" },
+      { code: "WI", name: "Wisconsin" },
+      { code: "WY", name: "Wyoming" },
+      // U.S. territories
+      { code: "AS", name: "American Samoa" },
+      { code: "GU", name: "Guam" },
+      { code: "MP", name: "Northern Mariana Islands" },
+      { code: "PR", name: "Puerto Rico" },
+      { code: "VI", name: "U.S. Virgin Islands" },
+      { code: "UM", name: "U.S. Minor Outlying Islands" },
     ],
   };
 
-  const isGTA = (postal) => postal.trim().toUpperCase().startsWith("M");
+
+  const gtaFSAs = [
+    // Toronto is covered by 'M' – allow all of it
+    "M",
+
+    // Mississauga
+    "L4T", "L4W", "L4X", "L4Y", "L5A", "L5B", "L5C", "L5E", "L5G", "L5H", "L5J", "L5K", "L5L", "L5M", "L5N", "L5R", "L5S", "L5T", "L5V", "L5W",
+
+    // Brampton
+    "L6P", "L6R", "L6S", "L6T", "L6V", "L6W", "L6X", "L6Y", "L6Z", "L7A",
+
+    // Vaughan
+    "L4H", "L4J", "L4K",
+
+    // Richmond Hill
+    "L4B", "L4C", "L4E",
+
+    // Markham
+    "L3P", "L3R", "L3S", "L6B", "L6C",
+
+    // Pickering & Ajax
+    "L1S", "L1T", "L1V", "L1W", "L1X",
+
+    // Whitby
+    "L1M", "L1N", "L1P", "L1R",
+
+    // Oakville
+    "L6H", "L6J", "L6K", "L6L",
+
+    // Burlington
+    "L7L", "L7M", "L7N", "L7P", "L7R", "L7S", "L7T"
+  ];
+
+  const isGTA = (postal) => {
+    if (!postal) return false;
+    const cleaned = postal.trim().toUpperCase().replace(/\s/g, '');
+    const fsa = cleaned.slice(0, 3);
+    return gtaFSAs.includes(fsa) || cleaned.startsWith("M");
+  };
+
 
   useEffect(() => {
     const fetchExchangeRate = async () => {
@@ -178,7 +276,7 @@ const [isFirstOrder, setIsFirstOrder] = useState(false);
   };
 
   const [isProcessing, setIsProcessing] = useState(false);
-const handlePayment = async () => {
+  const handlePayment = async () => {
     if (!validateForm()) {
       toast.error("Please fill in all required fields correctly.");
       return;
@@ -425,11 +523,10 @@ const handlePayment = async () => {
             <button
               onClick={handlePayment}
               disabled={isProcessing}
-              className={`w-full py-3 rounded transition ${
-                isProcessing
+              className={`w-full py-3 rounded transition ${isProcessing
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-[#F76C6C] text-white hover:bg-red-600"
-              }`}
+                }`}
             >
               {isProcessing ? "Processing..." : "Place Order"}
             </button>
