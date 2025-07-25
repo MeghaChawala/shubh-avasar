@@ -66,7 +66,7 @@ export default function Home() {
       <section className="py-8 px-6 bg-[#FFF5F5]">
         <div className="max-w-7xl mx-auto rounded-lg overflow-hidden shadow-lg">
           <Image
-            src="/images/discount-banner.jpg" // Update with your actual image path or URL
+            src="/images/discount-banner.png" // Update with your actual image path or URL
             alt="Discount Offer"
             className="w-full h-72 object-cover"
           />
