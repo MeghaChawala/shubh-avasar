@@ -12,7 +12,7 @@ export default function About() {
           <h2 className="text-2xl font-semibold mb-3">Our Story</h2>
           <p>
             Founded in 2025, Shubh Avasar was created with a fresh vision — to celebrate India’s rich cultural heritage through elegant and contemporary clothing. We blend time-honored craftsmanship with modern aesthetics to offer festive and everyday wear that feels both timeless and trend-forward.
-Whether you're dressing for tradition or today, we're here to bring beauty, comfort, and meaning to every outfit.
+Whether you&apos;re dressing for tradition or today, we&apos;re here to bring beauty, comfort, and meaning to every outfit.
           </p>
         </div>
         <div className="w-full md:w-1/2">
