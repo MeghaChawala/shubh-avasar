@@ -231,7 +231,7 @@ export default function Home() {
 
           <div className="rounded-lg overflow-hidden shadow-lg">
             <video
-              src="/images/brand-story.MOV"
+              src="/images/brand-story.mp4"
               controls
               muted
               poster="/images/brand-poster.jpg"
@@ -271,7 +271,7 @@ export default function Home() {
       </p>
 
       <button
-        onClick={() => router.push('/book-home-visit')}
+        onClick={() => router.push('/home-visit')}
         className="bg-[#F76C6C] hover:bg-[#d85757] text-white text-lg font-semibold py-3 px-8 rounded-full transition shadow-lg"
       >
         Book Now
