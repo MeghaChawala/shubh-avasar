@@ -317,7 +317,7 @@ export default function ProductDetail() {
             }}
             className="mt-6 bg-[#F76C6C] text-white px-6 py-3 rounded hover:bg-red-600 transition disabled:opacity-50"
           >
-            {product.quantity === 0 ? "Out of Stock" : "Add to Cart"}
+            {product.Quantity === 0 ? "Out of Stock" : "Add to Cart"}
           </button>
 
           {/* Share + Shipping */}
