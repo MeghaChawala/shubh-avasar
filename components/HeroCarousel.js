@@ -13,30 +13,20 @@ export default function HeroCarousel() {
       interval={4000}
       className="z-10"
     >
-<div className="relative w-full h-[800px] sm:h-[600px] md:h-[500px] lg:h-[800px]">
-  <Image
-    src="/images/Banner1.png"
-    alt="Slide 1"
-    className="object-cover"
-  />
-</div>
-
-<div className="relative w-full h-[800px] sm:h-[600px] md:h-[500px] lg:h-[800px]">
-  <Image
-    src="/images/Banner2.png"
-    alt="Slide 2"
-    className="object-cover"
-  />
-</div>
-
-<div className="relative w-full h-[800px] sm:h-[600px] md:h-[500px] lg:h-[800px]">
-  <Image
-    src="/images/Banner3.png"
-    alt="Slide 3"
-    className="object-cover"
-  />
-</div>
-
+      {['Banner1.png', 'Banner2.png', 'Banner3.png'].map((img, i) => (
+        <div
+          key={i}
+          className="relative w-full h-[400px] sm:h-[500px] md:h-[600px] lg:h-[800px]"
+        >
+          <Image
+            src={`/images/${img}`}
+            alt={`Slide ${i + 1}`}
+            fill
+            className="object-cover"
+            priority={i === 0} // Optional: prioritize first image for better LCP
+          />
+        </div>
+      ))}
     </Carousel>
   );
 }
