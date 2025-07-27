@@ -17,7 +17,6 @@ export default function HeroCarousel() {
   <Image
     src="/images/Banner1.png"
     alt="Slide 1"
-    fill
     className="object-cover"
   />
 </div>
@@ -26,7 +25,6 @@ export default function HeroCarousel() {
   <Image
     src="/images/Banner2.png"
     alt="Slide 2"
-    fill
     className="object-cover"
   />
 </div>
@@ -35,7 +33,6 @@ export default function HeroCarousel() {
   <Image
     src="/images/Banner3.png"
     alt="Slide 3"
-    fill
     className="object-cover"
   />
 </div>

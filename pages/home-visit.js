@@ -91,33 +91,33 @@ export default function HomeVisitPage() {
 
       <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-md shadow-md border border-gray-100">
         <label className="block">
-          <span className="text-gray-700 font-semibold">Name *</span>
+          <span className="text-gray-700 font-semibold">Name <span className="text-[#F76C6C]">*</span></span>
           <input type="text" name="name" required value={formData.name} onChange={handleChange}
             className="mt-1 block w-full border rounded-md p-2 border-gray-300" />
         </label>
 
         <label className="block">
-          <span className="text-gray-700 font-semibold">Email *</span>
+          <span className="text-gray-700 font-semibold">Email <span className="text-[#F76C6C]">*</span></span>
           <input type="text" name="email" required value={formData.email} onChange={handleChange}
             className={`mt-1 block w-full border rounded-md p-2 ${emailError ? 'border-[#F76C6C]' : 'border-gray-300'}`} />
           {emailError && <p className="text-[#F76C6C] text-sm mt-1">Enter a valid email address.</p>}
         </label>
 
         <label className="block">
-          <span className="text-gray-700 font-semibold">Phone *</span>
+          <span className="text-gray-700 font-semibold">Phone <span className="text-[#F76C6C]">*</span></span>
           <input type="tel" name="phone" required value={formData.phone} onChange={handleChange}
             className={`mt-1 block w-full border rounded-md p-2 ${phoneError ? 'border-[#F76C6C]' : 'border-gray-300'}`} />
           {phoneError && <p className="text-[#F76C6C] text-sm mt-1">{phoneError}</p>}
         </label>
 
         <label className="block">
-          <span className="text-gray-700 font-semibold">Address *</span>
+          <span className="text-gray-700 font-semibold">Address <span className="text-[#F76C6C]">*</span></span>
           <textarea name="address" required rows="2" value={formData.address} onChange={handleChange}
             className="mt-1 block w-full border rounded-md p-2 border-gray-300" />
         </label>
 
         <label className="block">
-          <span className="text-gray-700 font-semibold">Preferred Date *</span>
+          <span className="text-gray-700 font-semibold">Preferred Date <span className="text-[#F76C6C]">*</span></span>
           <input type="date" name="preferredDate" required value={formData.preferredDate} onChange={handleChange}
             className="mt-1 block w-full border rounded-md p-2 border-gray-300" min={new Date().toISOString().split('T')[0]} />
         </label>

@@ -11,7 +11,7 @@ export default function LegalPage() {
       <section className="mb-16">
         <h2 className="text-2xl font-semibold mb-4 text-[#1B263B]">Privacy Policy</h2>
         <p className="mb-4">
-          At <strong>Shubh Avasar</strong>, your privacy is important to us. We collect only the necessary
+          At <strong>Shubh Avsar</strong>, your privacy is important to us. We collect only the necessary
           information to process your orders and provide you with the best shopping experience.
         </p>
 
@@ -74,7 +74,7 @@ export default function LegalPage() {
 
         <h3 className="text-xl font-semibold mt-6 mb-2">5. Intellectual Property</h3>
         <p>
-          All content on this site including text, graphics, and images are property of <strong>Shubh Avasar</strong> and may not be reused without permission.
+          All content on this site including text, graphics, and images are property of <strong>Shubh Avsar</strong> and may not be reused without permission.
         </p>
 
         <h3 className="text-xl font-semibold mt-6 mb-2">6. Contact</h3>
