@@ -16,7 +16,7 @@ export default function HeroCarousel() {
       {['Banner1.png', 'Banner2.png', 'Banner3.png'].map((img, i) => (
         <div
           key={i}
-          className="relative w-full h-[400px] sm:h-[500px] md:h-[600px] lg:h-[800px]"
+          className="relative w-full h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen"
         >
           <Image
             src={`/images/${img}`}
