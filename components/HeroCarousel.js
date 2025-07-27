@@ -22,7 +22,7 @@ export default function HeroCarousel() {
             src={`/images/${img}`}
             alt={`Slide ${i + 1}`}
             fill
-            className="object-cover"
+            className="object-contain"
             priority={i === 0} // Optional: prioritize first image for better LCP
           />
         </div>
