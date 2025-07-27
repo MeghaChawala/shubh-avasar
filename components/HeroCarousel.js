@@ -3,6 +3,24 @@ import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import Image from 'next/image';
 
+const slides = [
+  {
+    desktop: '/images/Banner1.png',
+    mobile: '/images/Banner1-mobile.png',
+    alt: 'Slide 1',
+  },
+  {
+    desktop: '/images/Banner2.png',
+    mobile: '/images/Banner2-mobile.png',
+    alt: 'Slide 2',
+  },
+  {
+    desktop: '/images/Banner3.png',
+    mobile: '/images/Banner3-mobile.png',
+    alt: 'Slide 3',
+  },
+];
+
 export default function HeroCarousel() {
   return (
     <Carousel
@@ -13,18 +31,32 @@ export default function HeroCarousel() {
       interval={4000}
       className="z-10"
     >
-      {['Banner1.png', 'Banner2.png', 'Banner3.png'].map((img, i) => (
+      {slides.map((slide, index) => (
         <div
-          key={i}
-          className="relative w-full h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-screen"
+          key={index}
+          className="relative w-full h-[60vh] sm:h-[80vh] lg:h-screen bg-black"
         >
-          <Image
-            src={`/images/${img}`}
-            alt={`Slide ${i + 1}`}
-            fill
-            className="object-contain sm:object-cover"
-            priority={i === 0} // Optional: prioritize first image for better LCP
-          />
+          {/* Mobile Image */}
+          <div className="sm:hidden">
+            <Image
+              src={slide.mobile}
+              alt={slide.alt}
+              fill
+              className="object-contain"
+              priority={index === 0}
+            />
+          </div>
+
+          {/* Desktop Image */}
+          <div className="hidden sm:block">
+            <Image
+              src={slide.desktop}
+              alt={slide.alt}
+              fill
+              className="object-cover"
+              priority={index === 0}
+            />
+          </div>
         </div>
       ))}
     </Carousel>
