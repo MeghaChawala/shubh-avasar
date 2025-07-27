@@ -11,6 +11,7 @@ export default function Home() {
   const [newArrivals, setNewArrivals] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const visibleCount = 4;
+  const [bestSellers, setBestSellers] = useState([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -49,6 +50,25 @@ export default function Home() {
     fetchCategories();
     fetchNewArrivals();
   }, []);
+
+  useEffect(() => {
+  const fetchBestSellers = async () => {
+    try {
+      const q = query(
+        collection(db, "products"),
+        orderBy("sold", "desc"),
+        limit(10)
+      );
+      const snapshot = await getDocs(q);
+      const products = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setBestSellers(products);
+    } catch (err) {
+      console.error("Failed to fetch best sellers", err);
+    }
+  };
+
+  fetchBestSellers();
+}, []);
 
   const handlePrev = () => {
     setCurrentIndex((prev) => Math.max(prev - 1, 0));
@@ -101,7 +121,7 @@ export default function Home() {
                   alt={cat.category}
                   className="w-full h-full object-cover" />
               </div> */}
-                <div className="w-full h-64 relative overflow-hidden bg-white">
+                <div className="w-full h-96 relative overflow-hidden bg-white">
                   <Image
                     src={cat.images[0]}
                     alt={cat.category}
@@ -122,104 +142,102 @@ export default function Home() {
       {/* New Arrivals */}
       {/* New Arrivals */}
       <section className="py-12 px-6 bg-[#F9FAFB]">
-        <h2 className="text-3xl font-bold text-center mb-8">New Arrivals</h2>
+  <h2 className="text-3xl font-bold text-center mb-8">New Arrivals</h2>
 
-        <div className="relative max-w-7xl mx-auto">
-          {/* Scrollable Container */}
-          <div
-            id="scroll-container"
-            className="flex gap-6 overflow-x-auto scroll-smooth scrollbar-hide px-2"
-          >
-            {newArrivals.map((prod) => (
-              <div
-                key={prod.id}
-                className="min-w-[16rem] max-w-[18rem] flex-shrink-0 bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition"
-                onClick={() => router.push(`/product/${prod.id}`)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    router.push(`/product/${prod.id}`);
-                  }
-                }}
-              >
-                <div className="w-full h-64 bg-white flex items-center justify-center rounded-md overflow-hidden mb-4">
-                  <Image
-                    src={prod.images[0]}
-                    alt={prod.name}
-                    width={300}
-                    height={300}
-                    className="w-full !h-64"
-                  />
-                </div>
-
-                <h3 className="font-semibold text-lg">{prod.name}</h3>
-                {/* <p className="text-primary font-bold mt-1">₹{prod.price || "-"}</p> */}
-                <div className="flex items-center gap-3 mt-1">
-  {prod.originalPrice && prod.originalPrice > prod.price ? (
-    <>
-      <span className="text-lg text-gray-500 line-through">
-        ${prod.originalPrice.toFixed(2)}
-      </span>
-      <span className="text-xl text-[#F76C6C] font-bold mt-1">
-        ${prod.price.toFixed(2)}
-      </span>
-    </>
-  ) : (
-    <span className="text-xl text-[#F76C6C] font-bold mt-1">
-      ${prod.price.toFixed(2)}
-    </span>
-  )}
-</div>
-              </div>
-            ))}
-          </div>
-
-          {/* Left Arrow */}
-          <button
-            onClick={() => {
-              document.getElementById("scroll-container").scrollBy({
-                left: -300,
-                behavior: "smooth",
-              });
-            }}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow border border-gray-300 hover:shadow-md"
-            aria-label="Scroll Left"
-          >
-            <svg
-              className="w-5 h-5 text-black mx-auto"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-
-          {/* Right Arrow */}
-          <button
-            onClick={() => {
-              document.getElementById("scroll-container").scrollBy({
-                left: 300,
-                behavior: "smooth",
-              });
-            }}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow border border-gray-300 hover:shadow-md"
-            aria-label="Scroll Right"
-          >
-            <svg
-              className="w-5 h-5 text-black mx-auto"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 max-w-[1600px] mx-auto px-4">
+    {newArrivals.map((prod) => (
+      <div
+        key={prod.id}
+        className="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition"
+        onClick={() => router.push(`/product/${prod.id}`)}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            router.push(`/product/${prod.id}`);
+          }
+        }}
+      >
+        <div className="w-full h-96 bg-white flex items-center justify-center rounded-md overflow-hidden mb-4">
+          <Image
+            src={prod.images[0]}
+            alt={prod.name}
+            width={300}
+            height={300}
+            className="w-full !h-96"
+          />
         </div>
-      </section>
+
+        <h3 className="font-semibold text-lg">{prod.name}</h3>
+        <div className="flex items-center gap-3 mt-1">
+          {prod.originalPrice && prod.originalPrice > prod.price ? (
+            <>
+              <span className="text-lg text-gray-500 line-through">
+                ${prod.originalPrice.toFixed(2)}
+              </span>
+              <span className="text-xl text-[#F76C6C] font-bold mt-1">
+                ${prod.price.toFixed(2)}
+              </span>
+            </>
+          ) : (
+            <span className="text-xl text-[#F76C6C] font-bold mt-1">
+              ${prod.price.toFixed(2)}
+            </span>
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<section className="py-12 px-6 bg-white">
+  <h2 className="text-3xl font-bold text-center mb-8">Best Sellers</h2>
+
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 max-w-[1600px] mx-auto px-4">
+    {bestSellers.map((prod) => (
+      <div
+        key={prod.id}
+        className="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition"
+        onClick={() => router.push(`/product/${prod.id}`)}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            router.push(`/product/${prod.id}`);
+          }
+        }}
+      >
+        <div className="w-full h-96 bg-white flex items-center justify-center rounded-md overflow-hidden mb-4">
+          <Image
+            src={prod.images[0]}
+            alt={prod.name}
+            width={300}
+            height={300}
+            className="w-full !h-96"
+          />
+        </div>
+
+        <h3 className="font-semibold text-lg">{prod.name}</h3>
+        <div className="flex items-center gap-3 mt-1">
+          {prod.originalPrice && prod.originalPrice > prod.price ? (
+            <>
+              <span className="text-lg text-gray-500 line-through">
+                ${prod.originalPrice.toFixed(2)}
+              </span>
+              <span className="text-xl text-[#F76C6C] font-bold mt-1">
+                ${prod.price.toFixed(2)}
+              </span>
+            </>
+          ) : (
+            <span className="text-xl text-[#F76C6C] font-bold mt-1">
+              ${prod.price.toFixed(2)}
+            </span>
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
 
 
       {/* Brand Story Video Section */}

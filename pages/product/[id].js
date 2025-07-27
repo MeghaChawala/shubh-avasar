@@ -303,22 +303,23 @@ export default function ProductDetail() {
 
           {/* Add to Cart */}
           <button
-            disabled={product.quantity === 0}
-            onClick={() => {
-              if (product.quantity === 0) return;
+  disabled={product.quantity === 0}
+  onClick={() => {
+    if (product.Quantity === 0) return;
 
-              if (!selectedColor || !selectedSize) {
-                toast.error("Please select both color and size.");
-                return;
-              }
+    if (!selectedColor || !selectedSize) {
+      toast.error("Please select both color and size.");
+      return;
+    }
 
-              addToCart(product, selectedColor, selectedSize);
-              toast.success("Added to cart!");
-            }}
-            className="mt-6 bg-[#F76C6C] text-white px-6 py-3 rounded hover:bg-red-600 transition disabled:opacity-50"
-          >
-            {product.Quantity === 0 ? "Out of Stock" : "Add to Cart"}
-          </button>
+    addToCart(product, selectedColor, selectedSize);
+    toast.success("Added to cart!");
+  }}
+  className="mt-6 bg-[#F76C6C] text-white px-6 py-3 rounded hover:bg-red-600 transition disabled:opacity-50"
+>
+  {product.Quantity === 0 ? "Out of Stock" : "Add to Cart"}
+</button>
+
 
           {/* Share + Shipping */}
           <div className="bg-[#F9FAFB] rounded-lg p-4 mt-6 border border-gray-200 shadow-sm">
