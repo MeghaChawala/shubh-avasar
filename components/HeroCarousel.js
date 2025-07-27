@@ -42,7 +42,7 @@ export default function HeroCarousel() {
               src={slide.mobile}
               alt={slide.alt}
               fill
-              className="object-contain"
+              className="object-cover"
               priority={index === 0}
             />
           </div>
