@@ -5,8 +5,8 @@ import Image from 'next/image';
 
 const slides = [
   {
-    desktop: '/images/Banner1.png',
-    mobile: '/images/Banner1-mobile.png',
+    desktop: '/images/Banner1.png',        // 1366x768 ~16:9
+    mobile: '/images/Banner1-mobile.png',  // 1080x599 ~16:9
     alt: 'Slide 1',
   },
   {
@@ -22,6 +22,9 @@ const slides = [
 ];
 
 export default function HeroCarousel() {
+  // Mobile aspect ratio for your images
+  const mobileAspectRatio = 599 / 1080; // ~0.555
+
   return (
     <Carousel
       autoPlay
@@ -31,10 +34,14 @@ export default function HeroCarousel() {
       interval={4000}
       className="z-10"
     >
-      {slides.map((slide, index) => (
+      {slides.map((slide, i) => (
         <div
-          key={index}
-          className="relative w-full h-[60vh] sm:h-[80vh] lg:h-screen bg-black"
+          key={i}
+          className="relative w-full sm:h-[80vh] lg:h-screen bg-black"
+          style={{
+            // For mobile: dynamic height based on viewport width and aspect ratio
+            height: `calc(100vw * ${mobileAspectRatio})`,
+          }}
         >
           {/* Mobile Image */}
           <div className="sm:hidden">
@@ -42,8 +49,9 @@ export default function HeroCarousel() {
               src={slide.mobile}
               alt={slide.alt}
               fill
-              className="object-cover"
-              priority={index === 0}
+              className="object-contain"
+              priority={i === 0}
+              sizes="100vw"
             />
           </div>
 
@@ -54,7 +62,8 @@ export default function HeroCarousel() {
               alt={slide.alt}
               fill
               className="object-cover"
-              priority={index === 0}
+              priority={i === 0}
+              sizes="(min-width: 640px) 100vw"
             />
           </div>
         </div>
