@@ -98,7 +98,18 @@ export default function Home() {
 
       {/* Shop By Category */}
       <section className="py-12 px-6 bg-white">
-        <h2 className="text-3xl font-bold text-center mb-8">Shop by Category</h2>
+<div className="w-full mb-12">
+  <div className="w-full bg-gradient-to-r from-[#D72638] via-[#EF476F] to-[#FF6B6B] py-4 px-6 rounded-md shadow-md">
+    <h2 className="text-3xl md:text-4xl font-bold text-white text-center tracking-wide drop-shadow-sm font-serif">
+      Shop by Category
+    </h2>
+  </div>
+</div>
+
+
+
+
+
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto">
           {categories.map((cat) => {
             // console.log('CATEGORY:', cat.images);
@@ -142,7 +153,13 @@ export default function Home() {
       {/* New Arrivals */}
       {/* New Arrivals */}
       <section className="py-12 px-6 bg-[#F9FAFB]">
-  <h2 className="text-3xl font-bold text-center mb-8">New Arrivals</h2>
+  <div className="w-full mb-12">
+  <div className="w-full bg-gradient-to-r from-[#D72638] via-[#EF476F] to-[#FF6B6B] py-4 px-6 rounded-md shadow-md">
+    <h2 className="text-3xl md:text-4xl font-bold text-white text-center tracking-wide drop-shadow-sm font-serif">
+      New Arrivals
+    </h2>
+  </div>
+</div>
 
   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 max-w-[1600px] mx-auto px-4">
     {newArrivals.map((prod) => (
@@ -191,7 +208,13 @@ export default function Home() {
 </section>
 
 <section className="py-12 px-6 bg-white">
-  <h2 className="text-3xl font-bold text-center mb-8">Best Sellers</h2>
+  <div className="w-full mb-12">
+  <div className="w-full bg-gradient-to-r from-[#D72638] via-[#EF476F] to-[#FF6B6B] py-4 px-6 rounded-md shadow-md">
+    <h2 className="text-3xl md:text-4xl font-bold text-white text-center tracking-wide drop-shadow-sm font-serif">
+      Best Sellers
+    </h2>
+  </div>
+</div>
 
   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 max-w-[1600px] mx-auto px-4">
     {bestSellers.map((prod) => (
