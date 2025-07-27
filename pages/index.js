@@ -63,17 +63,18 @@ export default function Home() {
       <HeroCarousel />
 
       {/* Discount Banner */}
-      <section className="py-8 px-6 bg-[#FFF5F5]">
-        <div className="relative max-w-7xl mx-auto rounded-lg overflow-hidden shadow-lg h-[400px]">
-  <Image
-    src="/images/discount-banner.png"
-    alt="Discount Offer"
-    fill
-    className="object-cover"
-  />
-</div>
+<section className="py-8 px-6 bg-[#FFF5F5]">
+  <div className="relative max-w-7xl mx-auto rounded-lg overflow-hidden shadow-lg aspect-[2/1] sm:aspect-[3/1] lg:aspect-[3.5/1]">
+    <Image
+      src="/images/discount-banner.png"
+      alt="Discount Offer"
+      fill
+      // className="object-cover"
+      priority
+    />
+  </div>
+</section>
 
-      </section>
 
       {/* Shop By Category */}
       <section className="py-12 px-6 bg-white">
