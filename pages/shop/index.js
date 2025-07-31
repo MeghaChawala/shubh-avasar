@@ -37,45 +37,51 @@ export default function ShopPage() {
   const [page, setPage] = useState(1);
   const searchTerm = (router.query.search || "").toLowerCase().trim();
 
-  useEffect(() => {
-  // On mount or when URL changes, sync page state from URL
+useEffect(() => {
+  // Sync category from URL to state
+  const categoryFromQuery = router.query.category;
+  setSelectedFilters((prev) => ({
+    ...prev,
+    category: categoryFromQuery ? [categoryFromQuery] : [],
+  }));
+}, [router.query.category]);
+
+useEffect(() => {
+  // Sync page from URL to state
   const urlPage = parseInt(router.query.page) || 1;
   if (urlPage !== page) {
     setPage(urlPage);
   }
 }, [router.query.page]);
 
-// When category changes, reset page to 1 and update URL accordingly
 useEffect(() => {
+  // When category or page changes, sync URL with shallow routing
+
+  // If category changed, reset page to 1 in URL if needed
+  // So track category in URL query along with page
   const categoryFromQuery = router.query.category;
 
-  setSelectedFilters((prev) => ({
-    ...prev,
-    category: categoryFromQuery ? [categoryFromQuery] : [],
-  }));
+  const queryPage = parseInt(router.query.page) || 1;
 
-  if (page !== 1) {
-    router.push({
-      pathname: "/shop",
-      query: { category: categoryFromQuery, page: 1 },
-    }, undefined, { shallow: true });
-  } else {
-    setPage(1);
-  }
-}, [router.query.category]);
+  // Only push if URL query differs from state
+  const shouldUpdateURL =
+    categoryFromQuery !== (selectedFilters.category[0] || "") ||
+    queryPage !== page;
 
-// When page changes, update URL if it differs from router.query.page
-useEffect(() => {
-  if (parseInt(router.query.page) !== page) {
-    router.push({
-      pathname: "/shop",
-      query: {
-        category: router.query.category,
-        page,
+  if (shouldUpdateURL) {
+    router.push(
+      {
+        pathname: "/shop",
+        query: {
+          ...(selectedFilters.category[0] && { category: selectedFilters.category[0] }),
+          page,
+        },
       },
-    }, undefined, { shallow: true });
+      undefined,
+      { shallow: true }
+    );
   }
-}, [page]);
+}, [page, selectedFilters.category]);
 
 
   // Load category from URL
