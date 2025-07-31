@@ -96,9 +96,8 @@ export default function SignupForm({ switchTo, onClose }) {
               className="w-1/3 border border-gray-300 rounded-md px-2 py-3 focus:outline-none focus:ring-2 focus:ring-[#F76C6C]"
             >
               <option value="+1">🇺🇸 +1</option>
-              <option value="+91">🇮🇳 +91</option>
-              <option value="+44">🇬🇧 +44</option>
-              <option value="+61">🇦🇺 +61</option>
+<option value="+1">🇨🇦 +1</option>
+
             </select>
             <input
               {...register("phone", {
