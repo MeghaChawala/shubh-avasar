@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -18,6 +18,7 @@ export default function ShopPage() {
     color: [],
     size: [],
     category: [],
+    // tailoring: [],
   });
 
   const [productsData, setProductsData] = useState([]);
@@ -30,18 +31,14 @@ export default function ShopPage() {
     color: [],
     size: [],
     category: [],
+    // tailoring: [],
   });
 
   const [page, setPage] = useState(1);
-
-  const skipSyncRef = useRef(false);
-
   const searchTerm = (router.query.search || "").toLowerCase().trim();
-
-  // Sync category from URL query to state
+  
+  // Load category from URL
   useEffect(() => {
-    if (!router.isReady) return;
-
     const categoryFromQuery = router.query.category;
 
     setSelectedFilters((prev) => ({
@@ -49,57 +46,8 @@ export default function ShopPage() {
       category: categoryFromQuery ? [categoryFromQuery] : [],
     }));
 
-    setPage(1); // Reset page to 1 on category change
-  }, [router.query.category, router.isReady]);
-
-  // Sync page from URL query to state
-  useEffect(() => {
-    if (!router.isReady) return;
-
-    const pageFromQuery = parseInt(router.query.page) || 1;
-    if (pageFromQuery !== page) {
-      setPage(pageFromQuery);
-    }
-  }, [router.query.page, router.isReady, page]);
-
-  // Sync state (category & page) back to URL query with shallow routing
-  useEffect(() => {
-    if (!router.isReady) return;
-
-    if (skipSyncRef.current) {
-      skipSyncRef.current = false; // Reset flag, skip this cycle
-      return;
-    }
-
-    const query = {};
-
-    if (selectedFilters.category.length > 0) {
-      query.category = selectedFilters.category[0];
-    }
-
-    if (page > 1) {
-      query.page = page;
-    }
-
-    // Only push if query actually changed
-    const currentCategory = router.query.category || "";
-    const currentPage = parseInt(router.query.page) || 1;
-
-    if (
-      currentCategory !== (selectedFilters.category[0] || "") ||
-      currentPage !== page
-    ) {
-      skipSyncRef.current = true;
-      router.push(
-        {
-          pathname: router.pathname,
-          query,
-        },
-        undefined,
-        { shallow: true }
-      );
-    }
-  }, [page, selectedFilters.category, router, router.isReady]);
+    setPage(1);
+  }, [router.query.category]);
 
   // Fetch products and generate filter options
   useEffect(() => {
@@ -119,6 +67,7 @@ export default function ShopPage() {
         const uniqueColors = new Set();
         const uniqueSizes = new Set();
         const uniqueCategories = new Set();
+        // const uniqueTailoring = new Set();
 
         items.forEach((product) => {
           Object.entries(product.colorVariants || {}).forEach(([clr, variant]) => {
@@ -127,6 +76,7 @@ export default function ShopPage() {
           });
 
           if (product.category) uniqueCategories.add(product.category);
+          // if (product.tailoring) uniqueTailoring.add(product.tailoring);
         });
 
         setFilters({
@@ -134,6 +84,7 @@ export default function ShopPage() {
           color: Array.from(uniqueColors).sort(),
           size: Array.from(uniqueSizes).sort(),
           category: Array.from(uniqueCategories).sort(),
+          // tailoring: Array.from(uniqueTailoring).sort(),
         });
       } catch (err) {
         setError("Failed to load products.");
@@ -146,15 +97,16 @@ export default function ShopPage() {
 
   const fuse = new Fuse(productsData, {
     keys: ["name", "description", "category", "keywords"],
-    threshold: 0.3,
+    threshold: 0.3, // Tweak sensitivity
   });
 
-  const searchResults = searchTerm ? fuse.search(searchTerm).map((r) => r.item) : productsData;
+  const searchResults = searchTerm ? fuse.search(searchTerm).map(r => r.item) : productsData;
+
 
   // Filter logic
   const filteredProducts = searchResults.filter((product) => {
+    // const { price, color, size, category, tailoring } = selectedFilters;
     const { price, color, size, category } = selectedFilters;
-
     if (
       price.length > 0 &&
       !price.some((range) => {
@@ -168,14 +120,26 @@ export default function ShopPage() {
 
     if (category.length > 0 && !category.includes(product.category)) return false;
 
+    // if (tailoring.length > 0 && !tailoring.includes(product.tailoring)) return false;
+
     if (color.length > 0 || size.length > 0) {
-      const matched = Object.entries(product.colorVariants || {}).some(([clr, variant]) => {
-        const colorMatch = color.length === 0 || color.includes(clr);
-        const sizeMatch = size.length === 0 || (variant.sizes || []).some((s) => size.includes(s));
-        return colorMatch && sizeMatch;
-      });
+      const matched = Object.entries(product.colorVariants || {}).some(
+        ([clr, variant]) => {
+          const colorMatch = color.length === 0 || color.includes(clr);
+          const sizeMatch = size.length === 0 || (variant.sizes || []).some((s) => size.includes(s));
+          return colorMatch && sizeMatch;
+        }
+      );
       if (!matched) return false;
     }
+
+    // if (searchTerm) {
+    //   const matchesSearch =
+    //     product.name?.toLowerCase().includes(searchTerm) ||
+    //     product.description?.toLowerCase().includes(searchTerm) ||
+    //     product.category?.toLowerCase().includes(searchTerm);
+    //   if (!matchesSearch) return false;
+    // }
 
     return true;
   });
@@ -191,19 +155,25 @@ export default function ShopPage() {
     return new Date(b.createdAt?.seconds * 1000 || 0) - new Date(a.createdAt?.seconds * 1000 || 0);
   });
 
-  const paginatedProducts = sortedProducts.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const paginatedProducts = sortedProducts.slice(
+    (page - 1) * PAGE_SIZE,
+    page * PAGE_SIZE
+  );
 
   const handleFilterChange = (filterKey, option, checked) => {
     setSelectedFilters((prev) => {
       const options = prev[filterKey] || [];
-      const updatedOptions = checked ? [...options, option] : options.filter((o) => o !== option);
+      const updatedOptions = checked
+        ? [...options, option]
+        : options.filter((o) => o !== option);
+
       return {
         ...prev,
         [filterKey]: updatedOptions,
       };
     });
 
-    setPage(1); // Reset page to 1 when filters change
+    setPage(1);
   };
 
   if (loading) return <p className="p-6">Loading products...</p>;
@@ -213,6 +183,9 @@ export default function ShopPage() {
     selectedFilters.price.length > 0 ||
     selectedFilters.color.length > 0 ||
     selectedFilters.size.length > 0;
+  // selectedFilters.tailoring.length > 0;
+
+
 
   return (
     <div
@@ -227,8 +200,8 @@ export default function ShopPage() {
           selectedFilters.category.length > 0
             ? selectedFilters.category[0]
             : isFiltered
-            ? "Filtered"
-            : "All"
+              ? "Filtered"
+              : "All"
         }
       />
 
@@ -236,8 +209,8 @@ export default function ShopPage() {
         {selectedFilters.category.length > 0
           ? `Shop: ${selectedFilters.category.join(", ")}`
           : isFiltered
-          ? "Filtered Products"
-          : "All Products"}
+            ? "Filtered Products"
+            : "All Products"}
       </h1>
 
       <div className="flex gap-10">
