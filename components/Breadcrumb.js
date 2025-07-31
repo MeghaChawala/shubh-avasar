@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function Breadcrumb({ category, productName }) {
+  const router = useRouter();
+  const currentPage = router.query.page || 1;
   const isRealCategory = category && !["All", "Filtered"].includes(category);
 
   return (
@@ -16,7 +19,13 @@ export default function Breadcrumb({ category, productName }) {
             <li>
               {isRealCategory ? (
                 <Link
-                  href={`/shop?category=${encodeURIComponent(category)}`}
+                  href={{
+                    pathname: "/shop",
+                    query: {
+                      category: encodeURIComponent(category),
+                      page: currentPage,
+                    },
+                  }}
                   className="hover:underline text-[#1B263B]"
                 >
                   {category}
