@@ -22,7 +22,7 @@ export default function Breadcrumb({ category, productName }) {
                   href={{
                     pathname: "/shop",
                     query: {
-                      category: encodeURIComponent(category),
+                      category,
                       page: currentPage,
                     },
                   }}
