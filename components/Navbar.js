@@ -33,12 +33,12 @@ export default function Navbar() {
   const router = useRouter();
   const isCheckoutPage = router.pathname === "/checkout";
   useEffect(() => {
-    console.log("✅ useEffect for auth state change is running");
+    //console.log("✅ useEffect for auth state change is running");
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        console.log(currentUser)
+        //console.log(currentUser)
         setUser(currentUser);
-        console.log(currentUser)
+        //console.log(currentUser)
         await fetchOrders(currentUser.uid);
       } else {
         setUser(null);
@@ -50,12 +50,12 @@ export default function Navbar() {
 
   const fetchOrders = async (userUid) => {
     try {
-      console.log("uid", userUid);
+      //console.log("uid", userUid);
       const q = query(collection(db, "orders"), where("userUid", "==", userUid));
       const snapshot = await getDocs(q);
       const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setOrders(data);
-      console.log("data", data);
+      //console.log("data", data);
     } catch (err) {
       console.error("Failed to fetch orders", err);
     }

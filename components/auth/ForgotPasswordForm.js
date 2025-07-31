@@ -21,8 +21,8 @@ export default function ForgotPasswordForm({ switchTo, onClose }) {
      try {
           const q = query(collection(db, "users"), where("email", "==", email.toLowerCase()));
           const querySnapshot = await getDocs(q);
-          console.log("Querying for email:", email.toLowerCase());
-          console.log("Docs found:", querySnapshot.docs.map(doc => doc.data()));
+          //console.log("Querying for email:", email.toLowerCase());
+          //console.log("Docs found:", querySnapshot.docs.map(doc => doc.data()));
     
           if (querySnapshot.empty) {
             setFirebaseError("Email is not registered.");

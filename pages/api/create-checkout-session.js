@@ -136,7 +136,7 @@ export default async function handler(req, res) {
 }))),
 
     };
-console.log("Metadata being sent to Stripe:", metadata);
+//console.log("Metadata being sent to Stripe:", metadata);
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],

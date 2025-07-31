@@ -38,7 +38,7 @@ export default async function handler(req, res) {
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET.trim();
 
     event = stripe.webhooks.constructEvent(buf, sig, webhookSecret);
-    console.log('✅ Event verified:', event.type);
+    //console.log('✅ Event verified:', event.type);
   } catch (err) {
     console.error('❌ Signature verification failed:', err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
@@ -92,7 +92,7 @@ export default async function handler(req, res) {
         { merge: true }
       );
 
-      console.log(`✅ Order stored for user ${userUid} with Order #${orderNumber}`);
+      //console.log(`✅ Order stored for user ${userUid} with Order #${orderNumber}`);
       await sendOrderConfirmationEmail({
   to: session.customer_email,
   name: session.metadata?.fullName || "Customer",

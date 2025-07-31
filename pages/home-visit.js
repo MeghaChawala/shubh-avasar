@@ -42,9 +42,9 @@ export default function HomeVisitPage() {
     // Validate preferred date
     const selectedDate = new Date(formData.preferredDate);
     selectedDate.setHours(0, 0, 0, 0);
-    console.log(selectedDate)
+    //console.log(selectedDate)
     const today = new Date();
-    console.log(today)
+    //console.log(today)
     today.setHours(0, 0, 0, 0); // Set time to 00:00:00 for comparison
 
     if (selectedDate < today) {
