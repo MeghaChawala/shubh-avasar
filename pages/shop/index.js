@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import Fuse from "fuse.js"; 
+import Fuse from "fuse.js";
 import FiltersSidebar from "@/components/FiltersSidebar";
 import FilterDrawer from "@/components/FilterDrawer";
 import ProductCard from "@/components/ProductCard";
@@ -35,7 +35,49 @@ export default function ShopPage() {
   });
 
   const [page, setPage] = useState(1);
-const searchTerm = (router.query.search || "").toLowerCase().trim();
+  const searchTerm = (router.query.search || "").toLowerCase().trim();
+
+  useEffect(() => {
+  // On mount or when URL changes, sync page state from URL
+  const urlPage = parseInt(router.query.page) || 1;
+  if (urlPage !== page) {
+    setPage(urlPage);
+  }
+}, [router.query.page]);
+
+// When category changes, reset page to 1 and update URL accordingly
+useEffect(() => {
+  const categoryFromQuery = router.query.category;
+
+  setSelectedFilters((prev) => ({
+    ...prev,
+    category: categoryFromQuery ? [categoryFromQuery] : [],
+  }));
+
+  if (page !== 1) {
+    router.push({
+      pathname: "/shop",
+      query: { category: categoryFromQuery, page: 1 },
+    }, undefined, { shallow: true });
+  } else {
+    setPage(1);
+  }
+}, [router.query.category]);
+
+// When page changes, update URL if it differs from router.query.page
+useEffect(() => {
+  if (parseInt(router.query.page) !== page) {
+    router.push({
+      pathname: "/shop",
+      query: {
+        category: router.query.category,
+        page,
+      },
+    }, undefined, { shallow: true });
+  }
+}, [page]);
+
+
   // Load category from URL
   useEffect(() => {
     const categoryFromQuery = router.query.category;
@@ -181,49 +223,10 @@ const searchTerm = (router.query.search || "").toLowerCase().trim();
   const isFiltered =
     selectedFilters.price.length > 0 ||
     selectedFilters.color.length > 0 ||
-    selectedFilters.size.length > 0 ;
-    // selectedFilters.tailoring.length > 0;
+    selectedFilters.size.length > 0;
+  // selectedFilters.tailoring.length > 0;
 
 
-useEffect(() => {
-  // On mount or when URL changes, sync page state from URL
-  const urlPage = parseInt(router.query.page) || 1;
-  if (urlPage !== page) {
-    setPage(urlPage);
-  }
-}, [router.query.page]);
-
-// When category changes, reset page to 1 and update URL accordingly
-useEffect(() => {
-  const categoryFromQuery = router.query.category;
-
-  setSelectedFilters((prev) => ({
-    ...prev,
-    category: categoryFromQuery ? [categoryFromQuery] : [],
-  }));
-
-  if (page !== 1) {
-    router.push({
-      pathname: "/shop",
-      query: { category: categoryFromQuery, page: 1 },
-    }, undefined, { shallow: true });
-  } else {
-    setPage(1);
-  }
-}, [router.query.category]);
-
-// When page changes, update URL if it differs from router.query.page
-useEffect(() => {
-  if (parseInt(router.query.page) !== page) {
-    router.push({
-      pathname: "/shop",
-      query: {
-        category: router.query.category,
-        page,
-      },
-    }, undefined, { shallow: true });
-  }
-}, [page]);
 
   return (
     <div
@@ -238,8 +241,8 @@ useEffect(() => {
           selectedFilters.category.length > 0
             ? selectedFilters.category[0]
             : isFiltered
-            ? "Filtered"
-            : "All"
+              ? "Filtered"
+              : "All"
         }
       />
 
@@ -247,8 +250,8 @@ useEffect(() => {
         {selectedFilters.category.length > 0
           ? `Shop: ${selectedFilters.category.join(", ")}`
           : isFiltered
-          ? "Filtered Products"
-          : "All Products"}
+            ? "Filtered Products"
+            : "All Products"}
       </h1>
 
       <div className="flex gap-10">
