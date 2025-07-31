@@ -52,23 +52,23 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-  const fetchBestSellers = async () => {
-    try {
-      const q = query(
-        collection(db, "products"),
-        orderBy("sold", "desc"),
-        limit(10)
-      );
-      const snapshot = await getDocs(q);
-      const products = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      setBestSellers(products);
-    } catch (err) {
-      console.error("Failed to fetch best sellers", err);
-    }
-  };
+    const fetchBestSellers = async () => {
+      try {
+        const q = query(
+          collection(db, "products"),
+          orderBy("sold", "desc"),
+          limit(10)
+        );
+        const snapshot = await getDocs(q);
+        const products = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        setBestSellers(products);
+      } catch (err) {
+        console.error("Failed to fetch best sellers", err);
+      }
+    };
 
-  fetchBestSellers();
-}, []);
+    fetchBestSellers();
+  }, []);
 
   const handlePrev = () => {
     setCurrentIndex((prev) => Math.max(prev - 1, 0));
@@ -83,40 +83,40 @@ export default function Home() {
       <HeroCarousel />
 
       {/* Discount Banner */}
-<section className="py-8 px-6 bg-[#FFF5F5]">
-  <div className="relative max-w-7xl mx-auto rounded-lg overflow-hidden shadow-lg aspect-[2/1] sm:aspect-[3/1] lg:aspect-[3.5/1]">
-    <Image
-      src="/images/discount-banner.png"
-      alt="Discount Offer"
-      fill
-      // className="object-cover"
-      priority
-    />
-  </div>
-</section>
+      <section className="py-8 px-6 bg-[#FFF5F5]">
+        <div className="relative max-w-7xl mx-auto rounded-lg overflow-hidden shadow-lg aspect-[2/1] sm:aspect-[3/1] lg:aspect-[3.5/1]">
+          <Image
+            src="/images/discount-banner.png"
+            alt="Discount Offer"
+            fill
+            // className="object-cover"
+            priority
+          />
+        </div>
+      </section>
 
 
       {/* Shop By Category */}
       <section className="py-12 px-6 bg-white">
-<div className="w-full mb-12">
-  <div className="w-full bg-gradient-to-r from-[#D72638] via-[#EF476F] to-[#FF6B6B] py-4 px-6 rounded-md shadow-md">
-    <h2 className="text-3xl md:text-4xl font-bold text-white text-center tracking-wide drop-shadow-sm font-serif">
-      Shop by Category
-    </h2>
-  </div>
-</div>
+        <div className="w-full mb-12">
+          <div className="w-full bg-gradient-to-r from-[#D72638] via-[#EF476F] to-[#FF6B6B] py-4 px-6 rounded-md shadow-md">
+            <h2 className="text-3xl md:text-4xl font-bold text-white text-center tracking-wide drop-shadow-sm font-serif">
+              Shop by Category
+            </h2>
+          </div>
+        </div>
 
 
 
 
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {categories.map((cat) => {
             // console.log('CATEGORY:', cat.images);
             return (
               <div
                 key={cat.category}
-                className="cursor-pointer rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+                className="cursor-pointer rounded-lg overflow-hidden shadow-md hover:shadow-lg transition"
                 onClick={() => router.push(`/shop?category=${encodeURIComponent(cat.category)}`)}
                 role="button"
                 tabIndex={0}
@@ -132,16 +132,17 @@ export default function Home() {
                   alt={cat.category}
                   className="w-full h-full object-cover" />
               </div> */}
-                <div className="w-full h-96 relative overflow-hidden bg-white">
+                <div className="relative w-full aspect-[3/4] bg-white rounded-md overflow-hidden">
                   <Image
                     src={cat.images[0]}
                     alt={cat.category}
-                    fill
-                  // className="object-contain"
+                    layout="fill"
+                    objectFit="cover"
+                    objectPosition="center"
                   />
                 </div>
 
-                <div className="p-4 text-center bg-[#F76C6C] text-white font-semibold text-xl">
+                <div className="p-3 text-center bg-[#F76C6C] text-white font-semibold text-xl">
                   {cat.category}
                 </div>
               </div>
@@ -153,114 +154,116 @@ export default function Home() {
       {/* New Arrivals */}
       {/* New Arrivals */}
       <section className="py-12 px-6 bg-[#F9FAFB]">
-  <div className="w-full mb-12">
-  <div className="w-full bg-gradient-to-r from-[#D72638] via-[#EF476F] to-[#FF6B6B] py-4 px-6 rounded-md shadow-md">
-    <h2 className="text-3xl md:text-4xl font-bold text-white text-center tracking-wide drop-shadow-sm font-serif">
-      New Arrivals
-    </h2>
-  </div>
-</div>
-
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 max-w-[1600px] mx-auto px-4">
-    {newArrivals.map((prod) => (
-      <div
-        key={prod.id}
-        className="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition"
-        onClick={() => router.push(`/product/${prod.id}`)}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            router.push(`/product/${prod.id}`);
-          }
-        }}
-      >
-        <div className="w-full h-96 bg-white flex items-center justify-center rounded-md overflow-hidden mb-4">
-          <Image
-            src={prod.images[0]}
-            alt={prod.name}
-            width={300}
-            height={300}
-            className="w-full !h-96"
-          />
+        <div className="w-full mb-12">
+          <div className="w-full bg-gradient-to-r from-[#D72638] via-[#EF476F] to-[#FF6B6B] py-4 px-6 rounded-md shadow-md">
+            <h2 className="text-3xl md:text-4xl font-bold text-white text-center tracking-wide drop-shadow-sm font-serif">
+              New Arrivals
+            </h2>
+          </div>
         </div>
 
-        <h3 className="font-semibold text-lg">{prod.name}</h3>
-        <div className="flex items-center gap-3 mt-1">
-          {prod.originalPrice && prod.originalPrice > prod.price ? (
-            <>
-              <span className="text-lg text-gray-500 line-through">
-                ${prod.originalPrice.toFixed(2)}
-              </span>
-              <span className="text-xl text-[#F76C6C] font-bold mt-1">
-                ${prod.price.toFixed(2)}
-              </span>
-            </>
-          ) : (
-            <span className="text-xl text-[#F76C6C] font-bold mt-1">
-              ${prod.price.toFixed(2)}
-            </span>
-          )}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {newArrivals.map((prod) => (
+            <div
+              key={prod.id}
+              className="bg-white rounded-lg shadow-md  cursor-pointer hover:shadow-lg transition"
+              onClick={() => router.push(`/product/${prod.id}`)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  router.push(`/product/${prod.id}`);
+                }
+              }}
+            >
+              <div className="relative w-full aspect-[3/4] bg-white rounded-md overflow-hidden">
+                <Image
+                  src={prod.images[0]}
+                  alt={prod.name}
+                  layout="fill"
+                  objectFit="cover"
+                  objectPosition="center"
+                />
+              </div>
+              <div className="p-4 text-center">
+                <h3 className="font-semibold text-lg line-clamp-2 min-h-[3rem]">{prod.name}</h3>
+                <div className="flex items-center gap-3 mt-1">
+                  {prod.originalPrice && prod.originalPrice > prod.price ? (
+                    <>
+                      <span className="text-lg text-gray-500 line-through">
+                        ${prod.originalPrice.toFixed(2)}
+                      </span>
+                      <span className="text-xl text-[#F76C6C] font-bold mt-1">
+                        ${prod.price.toFixed(2)}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-xl text-[#F76C6C] font-bold mt-1">
+                      ${prod.price.toFixed(2)}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
-    ))}
-  </div>
-</section>
+      </section>
 
-<section className="py-12 px-6 bg-white">
-  <div className="w-full mb-12">
-  <div className="w-full bg-gradient-to-r from-[#D72638] via-[#EF476F] to-[#FF6B6B] py-4 px-6 rounded-md shadow-md">
-    <h2 className="text-3xl md:text-4xl font-bold text-white text-center tracking-wide drop-shadow-sm font-serif">
-      Best Sellers
-    </h2>
-  </div>
-</div>
-
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 max-w-[1600px] mx-auto px-4">
-    {bestSellers.map((prod) => (
-      <div
-        key={prod.id}
-        className="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition"
-        onClick={() => router.push(`/product/${prod.id}`)}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            router.push(`/product/${prod.id}`);
-          }
-        }}
-      >
-        <div className="w-full h-96 bg-white flex items-center justify-center rounded-md overflow-hidden mb-4">
-          <Image
-            src={prod.images[0]}
-            alt={prod.name}
-            width={300}
-            height={300}
-            className="w-full !h-96"
-          />
+      <section className="py-12 px-6 bg-white">
+        <div className="w-full mb-12">
+          <div className="w-full bg-gradient-to-r from-[#D72638] via-[#EF476F] to-[#FF6B6B] py-4 px-6 rounded-md shadow-md">
+            <h2 className="text-3xl md:text-4xl font-bold text-white text-center tracking-wide drop-shadow-sm font-serif">
+              Best Sellers
+            </h2>
+          </div>
         </div>
 
-        <h3 className="font-semibold text-lg">{prod.name}</h3>
-        <div className="flex items-center gap-3 mt-1">
-          {prod.originalPrice && prod.originalPrice > prod.price ? (
-            <>
-              <span className="text-lg text-gray-500 line-through">
-                ${prod.originalPrice.toFixed(2)}
-              </span>
-              <span className="text-xl text-[#F76C6C] font-bold mt-1">
-                ${prod.price.toFixed(2)}
-              </span>
-            </>
-          ) : (
-            <span className="text-xl text-[#F76C6C] font-bold mt-1">
-              ${prod.price.toFixed(2)}
-            </span>
-          )}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {bestSellers.map((prod) => (
+            <div
+              key={prod.id}
+              className="bg-white rounded-lg shadow-md  cursor-pointer hover:shadow-lg transition"
+              onClick={() => router.push(`/product/${prod.id}`)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  router.push(`/product/${prod.id}`);
+                }
+              }}
+            >
+              <div className="relative w-full aspect-[3/4] bg-white rounded-md overflow-hidden">
+                <Image
+                  src={prod.images[0]}
+                  alt={prod.name}
+                  layout="fill"
+                  objectFit="cover"
+                  objectPosition="center"
+                />
+              </div>
+              <div className="p-4 text-center">
+                <h3 className="font-semibold text-lg line-clamp-2 min-h-[3rem]">{prod.name}</h3>
+                <div className="flex justify-center items-center gap-2 mt-1">
+                  {prod.originalPrice && prod.originalPrice > prod.price ? (
+                    <>
+                      <span className=" text-gray-500 line-through">
+                        ${prod.originalPrice.toFixed(2)}
+                      </span>
+                      <span className=" text-[#F76C6C] font-bold mt-1">
+                        ${prod.price.toFixed(2)}
+                      </span>
+                    </>
+                  ) : (
+                    <span className=" text-[#F76C6C] font-bold mt-1">
+                      ${prod.price.toFixed(2)}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
-    ))}
-  </div>
-</section>
+      </section>
 
 
       {/* Brand Story Video Section */}
@@ -288,39 +291,39 @@ export default function Home() {
       </section>
 
 
-{/* Home Visit Section */}
-<div className="h-6 bg-gradient-to-b from-black to-[#FFF5F5]" />
-<section className="py-16 bg-[#FFF5F5]">
-  <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-    {/* Image or Illustration */}
-    <div className="relative h-80 md:h-full">
-      <Image
-        src="/images/home-visit.jpg" // Replace with your actual image path
-        alt="Home Visit"
-        fill
-        className="rounded-xl object-cover shadow-md"
-      />
-    </div>
+      {/* Home Visit Section */}
+      <div className="h-6 bg-gradient-to-b from-black to-[#FFF5F5]" />
+      <section className="py-16 bg-[#FFF5F5]">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          {/* Image or Illustration */}
+          <div className="relative h-80 md:h-full">
+            <Image
+              src="/images/home-visit.jpg" // Replace with your actual image path
+              alt="Home Visit"
+              fill
+              className="rounded-xl object-cover shadow-md"
+            />
+          </div>
 
-    {/* Text Content */}
-    <div className="text-center md:text-left">
-      <h2 className="text-4xl font-bold text-[#1B263B] mb-4 leading-tight">
-        Book a Personalized Home Visit
-      </h2>
-      <p className="text-lg text-gray-700 mb-6 max-w-xl">
-        Skip the travel—our stylist brings the boutique experience to your doorstep.
-        Explore outfits tailored to your taste, try them at home, and enjoy the ultimate comfort.
-      </p>
+          {/* Text Content */}
+          <div className="text-center md:text-left">
+            <h2 className="text-4xl font-bold text-[#1B263B] mb-4 leading-tight">
+              Book a Personalized Home Visit
+            </h2>
+            <p className="text-lg text-gray-700 mb-6 max-w-xl">
+              Skip the travel—our stylist brings the boutique experience to your doorstep.
+              Explore outfits tailored to your taste, try them at home, and enjoy the ultimate comfort.
+            </p>
 
-      <button
-        onClick={() => router.push('/home-visit')}
-        className="bg-[#F76C6C] hover:bg-[#d85757] text-white text-lg font-semibold py-3 px-8 rounded-full transition shadow-lg"
-      >
-        Book Now
-      </button>
-    </div>
-  </div>
-</section>
+            <button
+              onClick={() => router.push('/home-visit')}
+              className="bg-[#F76C6C] hover:bg-[#d85757] text-white text-lg font-semibold py-3 px-8 rounded-full transition shadow-lg"
+            >
+              Book Now
+            </button>
+          </div>
+        </div>
+      </section>
 
 
 
