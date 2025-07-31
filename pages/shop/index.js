@@ -184,6 +184,47 @@ const searchTerm = (router.query.search || "").toLowerCase().trim();
     selectedFilters.size.length > 0 ;
     // selectedFilters.tailoring.length > 0;
 
+
+useEffect(() => {
+  // On mount or when URL changes, sync page state from URL
+  const urlPage = parseInt(router.query.page) || 1;
+  if (urlPage !== page) {
+    setPage(urlPage);
+  }
+}, [router.query.page]);
+
+// When category changes, reset page to 1 and update URL accordingly
+useEffect(() => {
+  const categoryFromQuery = router.query.category;
+
+  setSelectedFilters((prev) => ({
+    ...prev,
+    category: categoryFromQuery ? [categoryFromQuery] : [],
+  }));
+
+  if (page !== 1) {
+    router.push({
+      pathname: "/shop",
+      query: { category: categoryFromQuery, page: 1 },
+    }, undefined, { shallow: true });
+  } else {
+    setPage(1);
+  }
+}, [router.query.category]);
+
+// When page changes, update URL if it differs from router.query.page
+useEffect(() => {
+  if (parseInt(router.query.page) !== page) {
+    router.push({
+      pathname: "/shop",
+      query: {
+        category: router.query.category,
+        page,
+      },
+    }, undefined, { shallow: true });
+  }
+}, [page]);
+
   return (
     <div
       className="min-h-screen bg-[#F4F6F8] px-6 py-10"
