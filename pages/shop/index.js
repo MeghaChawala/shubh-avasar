@@ -36,54 +36,7 @@ export default function ShopPage() {
 
   const [page, setPage] = useState(1);
   const searchTerm = (router.query.search || "").toLowerCase().trim();
-
-useEffect(() => {
-  // Sync category from URL to state
-  const categoryFromQuery = router.query.category;
-  setSelectedFilters((prev) => ({
-    ...prev,
-    category: categoryFromQuery ? [categoryFromQuery] : [],
-  }));
-}, [router.query.category]);
-
-useEffect(() => {
-  // Sync page from URL to state
-  const urlPage = parseInt(router.query.page) || 1;
-  if (urlPage !== page) {
-    setPage(urlPage);
-  }
-}, [router.query.page]);
-
-useEffect(() => {
-  // When category or page changes, sync URL with shallow routing
-
-  // If category changed, reset page to 1 in URL if needed
-  // So track category in URL query along with page
-  const categoryFromQuery = router.query.category;
-
-  const queryPage = parseInt(router.query.page) || 1;
-
-  // Only push if URL query differs from state
-  const shouldUpdateURL =
-    categoryFromQuery !== (selectedFilters.category[0] || "") ||
-    queryPage !== page;
-
-  if (shouldUpdateURL) {
-    router.push(
-      {
-        pathname: "/shop",
-        query: {
-          ...(selectedFilters.category[0] && { category: selectedFilters.category[0] }),
-          page,
-        },
-      },
-      undefined,
-      { shallow: true }
-    );
-  }
-}, [page, selectedFilters.category]);
-
-
+  
   // Load category from URL
   useEffect(() => {
     const categoryFromQuery = router.query.category;
