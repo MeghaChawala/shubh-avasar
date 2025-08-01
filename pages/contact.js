@@ -144,10 +144,8 @@ export default function ContactPage() {
               onChange={handleChange}
               className="w-1/3 border border-gray-300 rounded-md p-2"
             >
-              <option value="+1">🇺🇸 +1</option>
-              <option value="+91">🇮🇳 +91</option>
-              <option value="+44">🇬🇧 +44</option>
-              <option value="+61">🇦🇺 +61</option>
+                            <option value="+1">🇺🇸 +1</option>
+<option value="+1">🇨🇦 +1</option>
             </select>
             <input
               type="tel"
