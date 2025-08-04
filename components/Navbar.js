@@ -127,7 +127,7 @@ export default function Navbar() {
                       <a className="hover:text-[#1B263B] whitespace-nowrap text-sm">Kurtas</a>
                     </Link>
                   </li>
-                 
+
                 </ul>
               </div>
 
@@ -152,13 +152,18 @@ export default function Navbar() {
                     </Link>
                   </li>
                   <li>
-      <Link href="/shop?category=Designer%20Lehenga" legacyBehavior>
-        <a className="hover:text-[#1B263B] whitespace-nowrap text-sm">Designer Lehenga</a>
-      </Link>
-    </li>
-     <li>
+                    <Link href="/shop?category=Designer%20Lehenga" legacyBehavior>
+                      <a className="hover:text-[#1B263B] whitespace-nowrap text-sm">Designer Lehenga</a>
+                    </Link>
+                  </li>
+                  <li>
                     <Link href="/shop?category=Kediya" legacyBehavior>
                       <a className="hover:text-[#1B263B] whitespace-nowrap text-sm">Kediya</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/shop?category=Salwar%20Suit" legacyBehavior>
+                      <a className="hover:text-[#1B263B] whitespace-nowrap text-sm">Salwar Suit</a>
                     </Link>
                   </li>
                 </ul>
@@ -221,8 +226,8 @@ export default function Navbar() {
                             </p>
                             <span
                               className={`text-xs font-semibold mt-1 sm:mt-0 w-fit px-2 py-1 rounded-full ${order.status === "paid"
-                                  ? "bg-green-100 text-green-700"
-                                  : "bg-yellow-100 text-yellow-800"
+                                ? "bg-green-100 text-green-700"
+                                : "bg-yellow-100 text-yellow-800"
                                 }`}
                             >
                               {order.status}
@@ -340,7 +345,7 @@ export default function Navbar() {
                   </a>
                 </Link>
               </li>
-              
+
             </ul>
             <h4 className="text-[#F76C6C] font-bold mt-4">Women</h4>
             <ul className="space-y-2">
@@ -367,19 +372,24 @@ export default function Navbar() {
                 </Link>
               </li>
               <li>
-    <Link href="/shop?category=Designer%20Lehenga" legacyBehavior>
-      <a onClick={handleMobileLinkClick} className="block hover:text-[#F76C6C]">
-        Designer Lehenga
-      </a>
-    </Link>
-  </li>
-  <li>
-    <Link href="/shop?category=Kediya" legacyBehavior>
-      <a onClick={handleMobileLinkClick} className="block hover:text-[#F76C6C]">
-        Kediya
-      </a>
-    </Link>
-  </li>
+                <Link href="/shop?category=Designer%20Lehenga" legacyBehavior>
+                  <a onClick={handleMobileLinkClick} className="block hover:text-[#F76C6C]">
+                    Designer Lehenga
+                  </a>
+                </Link>
+              </li>
+              <li>
+                <Link href="/shop?category=Kediya" legacyBehavior>
+                  <a onClick={handleMobileLinkClick} className="block hover:text-[#F76C6C]">
+                    Kediya
+                  </a>
+                </Link>
+              </li>
+              <li>
+                <Link href="/shop?category=Salwar%20Suit" legacyBehavior>
+                  <a className="hover:text-[#1B263B] whitespace-nowrap text-sm">Salwar Suit</a>
+                </Link>
+              </li>
             </ul>
           </div>
         </details>
@@ -435,8 +445,8 @@ export default function Navbar() {
                       </span>
                       <span
                         className={`text-xs font-bold px-2 py-1 rounded-full mt-1 sm:mt-0 w-fit ${order.status === "paid"
-                            ? "bg-green-100 text-green-700"
-                            : "bg-yellow-100 text-yellow-800"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-yellow-100 text-yellow-800"
                           }`}
                       >
                         {order.status}
