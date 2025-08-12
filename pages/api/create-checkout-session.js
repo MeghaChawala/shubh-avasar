@@ -50,6 +50,36 @@ export default async function handler(req, res) {
       currency = "usd";
     }
 
+    // GTA postal FSAs
+const gtaFSAs = [
+  // Mississauga
+  "L4T", "L4W", "L4X", "L4Y", "L5A", "L5B", "L5C", "L5E", "L5G", "L5H", "L5J", "L5K", "L5L", "L5M", "L5N", "L5R", "L5S", "L5T", "L5V", "L5W",
+  // Brampton
+  "L6P", "L6R", "L6S", "L6T", "L6V", "L6W", "L6X", "L6Y", "L6Z", "L7A",
+  // Vaughan
+  "L4H", "L4J", "L4K",
+  // Richmond Hill
+  "L4B", "L4C", "L4E",
+  // Markham
+  "L3P", "L3R", "L3S", "L6B", "L6C",
+  // Pickering & Ajax
+  "L1S", "L1T", "L1V", "L1W", "L1X",
+  // Whitby
+  "L1M", "L1N", "L1P", "L1R",
+  // Oakville
+  "L6H", "L6J", "L6K", "L6L",
+  // Burlington
+  "L7L", "L7M", "L7N", "L7P", "L7R", "L7S", "L7T"
+];
+
+// Function to check GTA postal code
+const isGTA = (postal) => {
+  if (!postal) return false;
+  const cleaned = postal.trim().toUpperCase().replace(/\s/g, '');
+  const fsa = cleaned.slice(0, 3);
+  return gtaFSAs.includes(fsa) || cleaned.startsWith("M");
+};
+
     const baseSubtotalCAD = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
     const baseSubtotal = baseSubtotalCAD * exchangeRate;
 
@@ -58,7 +88,7 @@ export default async function handler(req, res) {
     }, 0);
     const customizationFee = customizationFeeCAD * exchangeRate;
 
-    const shippingFeeCAD = deliveryInfo.postalCode?.toUpperCase().startsWith("M") ? 0 : 5;
+    const shippingFeeCAD = isGTA(deliveryInfo.postalCode) ? 0 : 5;
     const shippingFee = shippingFeeCAD * exchangeRate;
 
     const line_items = cartItems.map((item) => ({
