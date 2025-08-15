@@ -88,7 +88,7 @@ const isGTA = (postal) => {
     }, 0);
     const customizationFee = customizationFeeCAD * exchangeRate;
 
-    const shippingFeeCAD = isGTA(deliveryInfo.postalCode) ? 0 : 5;
+    const shippingFeeCAD = isGTA(deliveryInfo.postalCode) ? 0 : 20;
     const shippingFee = shippingFeeCAD * exchangeRate;
 
     const line_items = cartItems.map((item) => ({

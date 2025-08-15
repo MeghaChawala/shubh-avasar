@@ -150,8 +150,8 @@ export default function CheckoutPage() {
 
 
   const gtaFSAs = [
-    // Toronto is covered by 'M' – allow all of it
-    "M",
+    // // Toronto is covered by 'M' – allow all of it
+    // "M",
 
     // Mississauga
     "L4T", "L4W", "L4X", "L4Y", "L5A", "L5B", "L5C", "L5E", "L5G", "L5H", "L5J", "L5K", "L5L", "L5M", "L5N", "L5R", "L5S", "L5T", "L5V", "L5W",
@@ -233,7 +233,7 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     if (deliveryInfo.postalCode) {
-      setShippingFee(isGTA(deliveryInfo.postalCode) ? 0 : 5);
+      setShippingFee(isGTA(deliveryInfo.postalCode) ? 0 : 20);
     }
   }, [deliveryInfo.postalCode]);
 
