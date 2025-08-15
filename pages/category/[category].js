@@ -6,6 +6,7 @@ import FiltersSidebar from "@/components/FiltersSidebar";
 import FilterDrawer from "@/components/FilterDrawer";
 import ProductCard from "@/components/ProductCard";
 import Breadcrumb from "@/components/Breadcrumb";
+import Pagination from "@/components/Pagination"; // Make sure you have this
 
 const PAGE_SIZE = 9;
 
