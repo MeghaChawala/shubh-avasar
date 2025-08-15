@@ -45,13 +45,14 @@ export default function CategoryPage() {
   // Set selected category from URL
   useEffect(() => {
     if (!category) return;
+    const currentPage = parseInt(router.query.page) || 1;
     setSelectedFilters((prev) => ({
       ...prev,
       category: [category],
     }));
     // setPage(1);
-    changePage(1);
-  }, [category]);
+    setPage(currentPage);
+  }, [category,router.query.page]);
 
   // Fetch products and populate filters
   useEffect(() => {
