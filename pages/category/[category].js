@@ -11,7 +11,7 @@ const PAGE_SIZE = 9;
 
 export default function CategoryPage() {
   const router = useRouter();
-  const { category } = router.query;
+  const { category,page: pageQuery } = router.query;
 
   const [filters, setFilters] = useState({
     price: ["Under $50", "$50 - $100", "Above $100"],
@@ -35,6 +35,12 @@ export default function CategoryPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Sync page with query param
+  useEffect(() => {
+    const currentPage = parseInt(pageQuery) || 1;
+    setPage(currentPage);
+  }, [pageQuery]);
+
   // Set selected category from URL
   useEffect(() => {
     if (!category) return;
@@ -42,7 +48,8 @@ export default function CategoryPage() {
       ...prev,
       category: [category],
     }));
-    setPage(1);
+    // setPage(1);
+    changePage(1);
   }, [category]);
 
   // Fetch products and populate filters
@@ -151,8 +158,22 @@ export default function CategoryPage() {
         [filterKey]: updatedOptions,
       };
     });
-    setPage(1);
+    changePage(1);
   };
+
+    // Change page & update URL without full reload
+  const changePage = (newPage) => {
+    setPage(newPage);
+    router.push(
+      {
+        pathname: router.pathname,
+        query: { ...router.query, page: newPage },
+      },
+      undefined,
+      { shallow: true }
+    );
+  };
+
 
   if (loading) return <p className="p-6">Loading products...</p>;
   if (error) return <p className="p-6 text-red-600">{error}</p>;
@@ -236,7 +257,7 @@ export default function CategoryPage() {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center items-center mt-10 space-x-4">
+      {/* <div className="flex justify-center items-center mt-10 space-x-4">
         <button
           disabled={page === 1}
           onClick={() => setPage((p) => Math.max(1, p - 1))}
@@ -254,7 +275,8 @@ export default function CategoryPage() {
         >
           Next
         </button>
-      </div>
+      </div> */}
+      <Pagination page={page} total={totalPages} setPage={changePage} />
     </div>
   );
 }

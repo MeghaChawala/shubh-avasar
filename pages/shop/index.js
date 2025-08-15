@@ -40,14 +40,14 @@ export default function ShopPage() {
   // Load category from URL
   useEffect(() => {
     const categoryFromQuery = router.query.category;
-
+    const pageFromQuery = parseInt(router.query.page) || 1;
     setSelectedFilters((prev) => ({
       ...prev,
       category: categoryFromQuery ? [categoryFromQuery] : [],
     }));
 
-    setPage(1);
-  }, [router.query.category]);
+    setPage(pageFromQuery);
+  }, [router.query.category, router.query.page]);
 
   // Fetch products and generate filter options
   useEffect(() => {
@@ -173,9 +173,21 @@ export default function ShopPage() {
       };
     });
 
-    setPage(1);
+    changePage(1);
   };
 
+  // Change page & update URL without full reload
+  const changePage = (newPage) => {
+    setPage(newPage);
+    router.push(
+      {
+        pathname: router.pathname,
+        query: { ...router.query, page: newPage },
+      },
+      undefined,
+      { shallow: true }
+    );
+  };
   if (loading) return <p className="p-6">Loading products...</p>;
   if (error) return <p className="p-6 text-red-600">{error}</p>;
 
@@ -263,7 +275,7 @@ export default function ShopPage() {
       <div className="flex justify-center items-center mt-10 space-x-4">
         <button
           disabled={page === 1}
-          onClick={() => setPage((p) => Math.max(1, p - 1))}
+          onClick={() => changePage(Math.max(1, page - 1))}
           className="px-4 py-2 bg-[#1B263B] text-white rounded disabled:opacity-50"
         >
           Previous
@@ -273,7 +285,7 @@ export default function ShopPage() {
         </span>
         <button
           disabled={page === totalPages}
-          onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+          onClick={() => changePage(Math.min(totalPages, page + 1))}
           className="px-4 py-2 bg-[#1B263B] text-white rounded disabled:opacity-50"
         >
           Next
