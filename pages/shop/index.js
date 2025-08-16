@@ -179,6 +179,8 @@ export default function ShopPage() {
   // Change page & update URL without full reload
   const changePage = (newPage) => {
     setPage(newPage);
+    const categoryKey = selectedFilters.category[0] || "all";
+    sessionStorage.setItem(`categoryPage_${categoryKey}`, newPage);
     router.push(
       {
         pathname: router.pathname,

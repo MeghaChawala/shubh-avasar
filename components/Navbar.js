@@ -123,7 +123,7 @@ export default function Navbar() {
                 </h3>
                 <ul className="space-y-2">
                   <li>
-                    <Link href="/shop?category=Kurtas" legacyBehavior>
+                    <Link href={`/shop?category=Kurtas&page=${sessionStorage.getItem("shopPage-Kurtas") || 1}`} legacyBehavior>
                       <a className="hover:text-[#1B263B] whitespace-nowrap text-sm">Kurtas</a>
                     </Link>
                   </li>
