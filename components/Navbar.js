@@ -27,20 +27,22 @@ export default function Navbar() {
   const [user, setUser] = useState(null);
   const [orders, setOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [categoryPages, setCategoryPages] = useState({});
+  // const [categoryPages, setCategoryPages] = useState({});
   const { wishlist } = useWishlist();
   const { cartItems } = useCart(); // ✅ Access cart items
   const router = useRouter();
   const isCheckoutPage = router.pathname === "/checkout";
 
-  useEffect(() => {
-  const categories = ["Kurtas", "Party Wear", "Navratri Chaniya Choli", "Sharara Suit", "Designer Lehenga", "Kediya", "Salwar Suit"];
-  const pages = {};
-  categories.forEach(cat => {
-    pages[cat] = parseInt(sessionStorage.getItem(`categoryPages-${cat}`)) || 1;
-  });
-  setCategoryPages(pages);
-}, []);
+// At the top of your component
+const categories = ["Kurtas", "Party Wear", "Navratri Chaniya Choli", "Sharara Suit", "Designer Lehenga", "Kediya", "Salwar Suit"];
+
+const initialCategoryPages = {};
+categories.forEach(cat => {
+  initialCategoryPages[cat] = parseInt(sessionStorage.getItem(`categoryPages-${cat}`)) || 1;
+});
+
+const [categoryPages, setCategoryPages] = useState(initialCategoryPages);
+
 
   useEffect(() => {
     //console.log("✅ useEffect for auth state change is running");
