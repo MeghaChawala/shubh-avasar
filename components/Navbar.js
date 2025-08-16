@@ -27,11 +27,21 @@ export default function Navbar() {
   const [user, setUser] = useState(null);
   const [orders, setOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [categoryPages, setCategoryPages] = useState({});
   const { wishlist } = useWishlist();
   const { cartItems } = useCart(); // ✅ Access cart items
   const router = useRouter();
   const isCheckoutPage = router.pathname === "/checkout";
+
+  useEffect(() => {
+  const categories = ["Kurtas", "Party Wear", "Navratri Chaniya Choli", "Sharara Suit", "Designer Lehenga", "Kediya", "Salwar Suit"];
+  const pages = {};
+  categories.forEach(cat => {
+    pages[cat] = sessionStorage.getItem(`shopPage-${cat}`) || 1;
+  });
+  setCategoryPages(pages);
+}, []);
+
   useEffect(() => {
     //console.log("✅ useEffect for auth state change is running");
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -123,7 +133,7 @@ export default function Navbar() {
                 </h3>
                 <ul className="space-y-2">
                   <li>
-                    <Link href={`/shop?category=Kurtas&page=${sessionStorage.getItem("shopPage-Kurtas") || 1}`} legacyBehavior>
+                    <Link href={`/shop?category=Kurtas&page=${categoryPages["Kurtas"]}`} legacyBehavior>
                       <a className="hover:text-[#1B263B] whitespace-nowrap text-sm">Kurtas</a>
                     </Link>
                   </li>
