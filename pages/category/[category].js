@@ -42,17 +42,22 @@ export default function CategoryPage() {
     setPage(currentPage);
   }, [pageQuery]);
 
-  // Set selected category from URL
-  useEffect(() => {
-    if (!category) return;
-    const currentPage = parseInt(router.query.page) || 1;
-    setSelectedFilters((prev) => ({
-      ...prev,
-      category: [category],
-    }));
-    // setPage(1);
-    setPage(currentPage);
-  }, [category,router.query.page]);
+ // Sync page from query param
+useEffect(() => {
+  const currentPage = parseInt(router.query.page) || 1;
+  setPage(currentPage);
+}, [router.query.page]);
+
+// Set selected category from URL
+useEffect(() => {
+  if (!category) return;
+  setSelectedFilters((prev) => ({
+    ...prev,
+    category: [category],
+  }));
+  // DO NOT touch page here
+}, [category]);
+
 
   // Fetch products and populate filters
   useEffect(() => {
