@@ -37,7 +37,7 @@ export default function Navbar() {
   const categories = ["Kurtas", "Party Wear", "Navratri Chaniya Choli", "Sharara Suit", "Designer Lehenga", "Kediya", "Salwar Suit"];
   const pages = {};
   categories.forEach(cat => {
-    pages[cat] = sessionStorage.getItem(`categoryPages-${cat}`) || 1;
+    pages[cat] = parseInt(sessionStorage.getItem(`categoryPages-${cat}`)) || 1;
   });
   setCategoryPages(pages);
 }, []);
