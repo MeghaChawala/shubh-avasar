@@ -40,7 +40,14 @@ export default function ShopPage() {
   // Load category from URL
   useEffect(() => {
     const categoryFromQuery = router.query.category;
-    const pageFromQuery = parseInt(router.query.page) || 1;
+    const pageFromQuery = parseInt(router.query.page);
+
+    if (!pageFromQuery && typeof window !== "undefined") {
+    // Try to load last page from sessionStorage
+    const storedPage = sessionStorage.getItem(`categoryPage_${categoryFromQuery}`);
+    pageFromQuery = storedPage ? parseInt(storedPage) : 1;
+  }
+
     setSelectedFilters((prev) => ({
       ...prev,
       category: categoryFromQuery ? [categoryFromQuery] : [],
@@ -180,7 +187,9 @@ export default function ShopPage() {
   const changePage = (newPage) => {
     setPage(newPage);
     const categoryKey = selectedFilters.category[0] || "all";
+    if (typeof window !== "undefined") {
     sessionStorage.setItem(`categoryPage_${categoryKey}`, newPage);
+  }
     router.push(
       {
         pathname: router.pathname,
