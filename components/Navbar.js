@@ -101,7 +101,7 @@ export default function Navbar() {
           <a className="flex items-center">
             <Image
               src="/01.png"
-              alt="Shubh Avasar Logo"
+              alt="Shubh Avasar"
               width={2226}
               height={1698}
               priority
