@@ -155,11 +155,11 @@ const isGTA = (postal) => {
       itemCount: cartItems.length.toString(),
       // Optional: comment out if your cart is large
       cartItems: JSON.stringify(cartItems.map(i => ({
-  id: i.id,                  // Product ID
-  name: i.name,
+  // id: i.id,                  // Product ID
+  // name: i.name,
   qty: i.qty,
   price: i.price,
-  image: i.image || "",      // ✅ Add image URL
+  // image: i.image || "",      // ✅ Add image URL
   productId: i.id || "",     // ✅ Explicit product ID (if different)
   color: i.selectedColor,
   size: i.selectedSize
