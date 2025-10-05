@@ -34,7 +34,7 @@ export default function Navbar() {
   const isCheckoutPage = router.pathname === "/checkout";
 
   useEffect(() => {
-  const categories = ["Kurtas", "Party Wear", "Navratri Chaniya Choli", "Sharara Suit", "Designer Lehenga", "Kediya", "Salwar Suit"];
+  const categories = ["Kurtas","Kids Kurtas", "Party Wear", "Navratri Chaniya Choli", "Sharara Suit", "Designer Lehenga", "Kediya", "Salwar Suit"];
   const pages = {};
   categories.forEach(cat => {
     pages[cat] = parseInt(sessionStorage.getItem(`categoryPages-${cat}`)) || 1;
@@ -135,6 +135,13 @@ export default function Navbar() {
                   <li>
                     <Link href={`/shop?category=Kurtas&page=${categoryPages["Kurtas"]}`} legacyBehavior>
                       <a className="hover:text-[#1B263B] whitespace-nowrap text-sm">Kurtas</a>
+                    </Link>
+                  </li>
+
+            
+                  <li>
+                    <Link href={`/shop?category=Kids%20Kurtas&page=${categoryPages["Kids Kurtas"]}`} legacyBehavior>
+                      <a className="hover:text-[#1B263B] whitespace-nowrap text-sm">Kids Kurtas</a>
                     </Link>
                   </li>
 
@@ -352,6 +359,13 @@ export default function Navbar() {
                 <Link href="/shop?category=Kurtas" legacyBehavior>
                   <a onClick={handleMobileLinkClick} className="block hover:text-[#F76C6C]">
                     Kurtas
+                  </a>
+                </Link>
+              </li>
+              <li>
+                <Link href="/shop?category=Kids%20Kurtas" legacyBehavior>
+                  <a onClick={handleMobileLinkClick} className="block hover:text-[#F76C6C]">
+                    Kids Kurtas
                   </a>
                 </Link>
               </li>
