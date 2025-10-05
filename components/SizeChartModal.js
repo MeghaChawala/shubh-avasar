@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import imageKitLoader from "@/loaders/imageKitLoader";
 
 export default function SizeChartModal({ isOpen, onClose }) {
   if (!isOpen) return null;
@@ -17,11 +18,12 @@ export default function SizeChartModal({ isOpen, onClose }) {
           Kids Kurta Size Chart
         </h2>
         <Image
-          src="/images/kids-kurta-sizechart.jpeg"  
+          src="kids-kurta-sizechart.jpeg"  
           alt="Kids Kurta Size Chart"
           width={400}
           height={400}
           className="rounded-lg object-contain w-full"
+          loader={imageKitLoader}
         />
       </div>
     </div>
