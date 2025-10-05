@@ -23,7 +23,7 @@ export default function SizeChartModal({ isOpen, onClose }) {
           width={400}
           height={400}
           className="rounded-lg object-contain w-full"
-          loader={imageKitLoader}
+
         />
       </div>
     </div>
