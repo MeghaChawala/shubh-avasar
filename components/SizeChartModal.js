@@ -18,7 +18,7 @@ export default function SizeChartModal({ isOpen, onClose }) {
           Kids Kurta Size Chart
         </h2>
         <Image
-          src="kids-kurta-sizechart.jpeg"  
+          src="/images/kids-kurta-sizechart.jpeg"  
           alt="Kids Kurta Size Chart"
           width={400}
           height={400}
