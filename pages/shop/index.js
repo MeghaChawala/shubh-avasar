@@ -7,6 +7,7 @@ import FiltersSidebar from "@/components/FiltersSidebar";
 import FilterDrawer from "@/components/FilterDrawer";
 import ProductCard from "@/components/ProductCard";
 import Breadcrumb from "@/components/Breadcrumb";
+import SizeChartModal from "@/components/SizeChartModal";
 
 const PAGE_SIZE = 9;
 
@@ -35,6 +36,7 @@ export default function ShopPage() {
   });
 
   const [page, setPage] = useState(1);
+  const [isSizeChartOpen, setIsSizeChartOpen] = useState(false);
   const searchTerm = (router.query.search || "").toLowerCase().trim();
   
   // Load category from URL
@@ -235,6 +237,24 @@ export default function ShopPage() {
             ? "Filtered Products"
             : "All Products"}
       </h1>
+
+         {/* ✅ SIZE CHART BUTTON visible only for Kids Kurtas */}
+      {currentCategory === "Kids Kurtas" && (
+        <div className="flex justify-center mb-6">
+          <button
+            onClick={() => setIsSizeChartOpen(true)}
+            className="bg-[#F76C6C] hover:bg-[#d85757] text-white px-6 py-2 rounded-md font-medium transition"
+          >
+            View Size Chart
+          </button>
+        </div>
+      )}
+
+      {/* ✅ MODAL */}
+      <SizeChartModal
+        isOpen={isSizeChartOpen}
+        onClose={() => setIsSizeChartOpen(false)}
+      />
 
       <div className="flex gap-10">
         {/* Sidebar Filters */}
