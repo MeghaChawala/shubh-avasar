@@ -36,6 +36,7 @@ export default function ShopPage() {
   });
 
   const [page, setPage] = useState(1);
+  const currentCategory = selectedFilters.category[0] || "";
   const [isSizeChartOpen, setIsSizeChartOpen] = useState(false);
   const searchTerm = (router.query.search || "").toLowerCase().trim();
   
