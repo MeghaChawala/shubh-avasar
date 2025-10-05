@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import imageKitLoader from "@/loaders/imageKitLoader";
+
 
 export default function SizeChartModal({ isOpen, onClose }) {
   if (!isOpen) return null;
