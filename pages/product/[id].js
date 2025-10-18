@@ -32,7 +32,7 @@ export default function ProductDetail() {
 
   const [colorVariants, setColorVariants] = useState({});
   const [availableSizes, setAvailableSizes] = useState([]);
-  const [colorImage, setColorImage] = useState("");
+  const [colorImages, setColorImages] = useState([]);
 
   const { wishlist, toggleWishlist } = useWishlist();
   const isWished = wishlist.some((item) => item.id === product?.id);
@@ -72,7 +72,7 @@ export default function ProductDetail() {
           const firstColor = Object.keys(data.colorVariants)[0];
           setSelectedColor(firstColor);
           setAvailableSizes(data.colorVariants[firstColor].sizes || []);
-          setColorImage(data.colorVariants[firstColor].image || "");
+          setColorImages(data.colorVariants[firstColor].images || []);
           setCurrentImg(0);
         } else {
           setColorImage(data.images?.[0] || data.image);
@@ -132,8 +132,8 @@ export default function ProductDetail() {
   if (loading) return <p className="p-6">Loading...</p>;
   if (!product) return <p className="p-6">Product not found.</p>;
 
-  const images = colorImage
-    ? [colorImage]
+  const images = colorImages.length > 0
+    ? colorImages
     : product.images?.length
       ? product.images
       : [product.image];
@@ -257,7 +257,7 @@ export default function ProductDetail() {
                     onClick={() => {
                       setSelectedColor(color);
                       setAvailableSizes(info.sizes || []);
-                      setColorImage(info.image || "");
+                      setColorImage(info.images || []);
                       setCurrentImg(0);
                     }}
                     className={`px-3 py-1 rounded-full border ${color === selectedColor ? "bg-[#F76C6C] text-white" : "bg-white text-black"
