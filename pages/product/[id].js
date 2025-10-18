@@ -257,7 +257,7 @@ export default function ProductDetail() {
                     onClick={() => {
                       setSelectedColor(color);
                       setAvailableSizes(info.sizes || []);
-                      setColorImage(info.images || []);
+                      setColorImages(info.images || []);
                       setCurrentImg(0);
                     }}
                     className={`px-3 py-1 rounded-full border ${color === selectedColor ? "bg-[#F76C6C] text-white" : "bg-white text-black"
